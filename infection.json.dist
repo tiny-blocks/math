@@ -1,0 +1,32 @@
+{
+    "timeout": 10,
+    "testFramework": "phpunit",
+    "tmpDir": "report/",
+    "source": {
+        "directories": [
+            "src"
+        ]
+    },
+    "logs": {
+        "text": "report/logs/infection-text.log",
+        "summary": "report/logs/infection-summary.log"
+    },
+    "mutators": {
+        "@default": true,
+        "Minus": false,
+        "BCMath": false,
+        "Ternary": false,
+        "MBString": false,
+        "UnwrapTrim": false,
+        "UnwrapSubstr": false,
+        "AssignmentEqual": false,
+        "IncrementInteger": false,
+        "PublicVisibility": false,
+        "MethodCallRemoval": false,
+        "ProtectedVisibility": false
+    },
+    "phpUnit": {
+        "configDir": "",
+        "customPath": "./vendor/bin/phpunit"
+    }
+}
