@@ -26,7 +26,7 @@ final class PositiveBigDecimalTest extends TestCase
         $template = 'The <%.2f> value must be positive.';
 
         $this->expectException(NonPositiveNumber::class);
-        $this->expectErrorMessage(sprintf($template, $value));
+        $this->expectExceptionMessage(sprintf($template, $value));
 
         PositiveBigDecimal::from(value: $value);
     }
@@ -36,7 +36,7 @@ final class PositiveBigDecimalTest extends TestCase
         $template = 'The <%.2f> value must be positive.';
 
         $this->expectException(NonPositiveNumber::class);
-        $this->expectErrorMessage(sprintf($template, -1.00));
+        $this->expectExceptionMessage(sprintf($template, -1.00));
 
         $positive = PositiveBigDecimal::from(value: 10.155);
         $positive->negate();
