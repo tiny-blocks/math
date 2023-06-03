@@ -27,7 +27,7 @@ final class ScaleTest extends TestCase
         $template = 'Scale value <%s> is invalid. The value must be between <%s> and <%s>.';
 
         $this->expectException(InvalidScale::class);
-        $this->expectErrorMessage(sprintf($template, $value, 0, 2147483647));
+        $this->expectExceptionMessage(sprintf($template, $value, 0, 2147483647));
 
         new Scale(value: $value);
     }
