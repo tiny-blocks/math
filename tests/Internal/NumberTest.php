@@ -15,7 +15,7 @@ final class NumberTest extends TestCase
         $template = 'The value <%s> is not a valid number.';
 
         $this->expectException(InvalidNumber::class);
-        $this->expectErrorMessage(sprintf($template, $value));
+        $this->expectExceptionMessage(sprintf($template, $value));
 
         new Number(value: $value);
     }

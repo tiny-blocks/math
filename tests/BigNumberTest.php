@@ -76,7 +76,7 @@ final class BigNumberTest extends TestCase
         $template = 'Cannot divide <%.2f> by <%.2f>.';
 
         $this->expectException(DivisionByZero::class);
-        $this->expectErrorMessage(sprintf($template, $value, $other));
+        $this->expectExceptionMessage(sprintf($template, $value, $other));
 
         $dividend = BigNumberMock::from(value: $value);
         $divisor = BigNumberMock::from(value: $other);

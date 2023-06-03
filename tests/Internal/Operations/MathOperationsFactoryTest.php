@@ -13,7 +13,7 @@ final class MathOperationsFactoryTest extends TestCase
         $template = 'There are no implementations available. Enable one of these <%s> extensions.';
 
         $this->expectException(MathOperationsNotAvailable::class);
-        $this->expectErrorMessage(sprintf($template, 'bcmath'));
+        $this->expectExceptionMessage(sprintf($template, 'bcmath'));
 
         (new MathOperationsFactory(extension: new ExtensionAdapterMock()))->build();
     }
