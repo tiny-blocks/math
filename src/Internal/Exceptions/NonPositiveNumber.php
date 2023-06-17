@@ -10,6 +10,6 @@ final class NonPositiveNumber extends RuntimeException
     public function __construct(private readonly Number $number)
     {
         $template = 'The <%.2f> value must be positive.';
-        parent::__construct(sprintf($template, $this->number->value));
+        parent::__construct(message: sprintf($template, $this->number->value));
     }
 }
