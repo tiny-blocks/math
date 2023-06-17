@@ -9,6 +9,6 @@ final class InvalidNumber extends RuntimeException
     public function __construct(mixed $value)
     {
         $template = 'The value <%s> is not a valid number.';
-        parent::__construct(sprintf($template, $value));
+        parent::__construct(message: sprintf($template, $value));
     }
 }
