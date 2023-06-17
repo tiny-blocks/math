@@ -60,7 +60,7 @@ $addend = BigDecimal::from(value: '1');
 
 $result = $augend->add(addend: $addend);
 
-echo $result->toString(); # 2
+$result->toString(); # 2
 ```
 
 #### Subtraction
@@ -73,7 +73,7 @@ $subtrahend = BigDecimal::from(value: '1');
 
 $result = $minuend->subtract(subtrahend: $subtrahend);
 
-echo $result->toString(); # 0
+$result->toString(); # 0
 ```
 
 #### Multiplication
@@ -86,7 +86,7 @@ $multiplier = BigDecimal::from(value: '1');
 
 $result = $multiplicand->multiply(multiplier: $multiplier);
 
-echo $result->toString(); # 1
+$result->toString(); # 1
 ```
 
 #### Division
@@ -99,7 +99,7 @@ $divisor = BigDecimal::from(value: '1');
 
 $result = $dividend->divide(divisor: $divisor);
 
-echo $result->toString(); # 1
+$result->toString(); # 1
 ```
 
 ### Using other resources
@@ -116,7 +116,7 @@ rounding occurs:
 
     $result = $value->withRounding(mode: RoundingMode::HALF_UP);
   
-    echo $result->toString(); # 1
+    $result->toString(); # 1
     ```
 
 - `HALF_DOWN`: Round number to zero when halfway.
@@ -126,7 +126,7 @@ rounding occurs:
 
     $result = $value->withRounding(mode: RoundingMode::HALF_DOWN);
   
-    echo $result->toString(); # 0.99
+    $result->toString(); # 0.99
     ```
 
 - `HALF_EVEN`: Round number to the nearest even value when halfway.
@@ -136,7 +136,7 @@ rounding occurs:
 
     $result = $value->withRounding(mode: RoundingMode::HALF_EVEN);
 
-    echo $result->toString(); # 1
+    $result->toString(); # 1
     ```
 
 - `HALF_ODD`: Round number to the nearest odd value when halfway.
@@ -146,7 +146,7 @@ rounding occurs:
 
     $result = $value->withRounding(mode: RoundingMode::HALF_ODD);
 
-    echo $result->toString(); # 0.99
+    $result->toString(); # 0.99
     ```
 
 #### Negate
@@ -158,16 +158,18 @@ $value = BigDecimal::from(value: 1);
 
 $result = $value->negate();
 
-echo $result->toString(); # -1
+$result->toString(); # -1
 ```
 
 #### Others
 
 Check out other available resources by looking at the [BigNumber](src/BigNumber.php) interface.
 
+<div id='license'></div>
+
 ## License
 
-Math is licensed under [MIT](/LICENSE).
+Math is licensed under [MIT](LICENSE).
 
 <div id='contributing'></div>
 

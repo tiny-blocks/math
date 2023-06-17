@@ -42,13 +42,17 @@
     },
     "require": {
         "php": "^8.1||^8.2",
-        "tiny-blocks/value-object": "^2.0"
+        "tiny-blocks/value-object": "^2.0",
+        "ext-bcmath": "*"
     },
     "require-dev": {
         "infection/infection": "^0.26",
-        "phpmd/phpmd": "^2.12",
-        "phpunit/phpunit": "^9.5",
+        "phpmd/phpmd": "^2.13",
+        "phpunit/phpunit": "^9.6",
         "squizlabs/php_codesniffer": "^3.7"
+    },
+    "suggest": {
+        "ext-bcmath": "Enables the extension which is an interface to the GNU implementation as a Basic Calculator utility library."
     },
     "scripts": {
         "phpcs": "phpcs --standard=PSR12 --extensions=php ./src",
