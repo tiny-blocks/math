@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TinyBlocks\Math\Internal\Operations\Adapters\Scales;
 
 use TinyBlocks\Math\BigNumber;
 use TinyBlocks\Math\Internal\Scale;
 
-final class Multiplication implements Scales
+final readonly class Multiplication implements Scales
 {
-    private readonly Scale $multiplicandScale;
-    private readonly Scale $multiplierScale;
+    private Scale $multiplicandScale;
+    private Scale $multiplierScale;
 
-    public function __construct(private readonly BigNumber $multiplicand, private readonly BigNumber $multiplier)
+    public function __construct(private BigNumber $multiplicand, private BigNumber $multiplier)
     {
         $this->multiplicandScale = new Scale(value: $this->multiplicand->getScale());
         $this->multiplierScale = new Scale(value: $this->multiplier->getScale());

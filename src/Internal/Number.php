@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TinyBlocks\Math\Internal;
 
 use TinyBlocks\Math\Internal\Exceptions\InvalidNumber;
 
-final class Number
+class Number
 {
     private const ZERO = 0.0;
     private const SIGN = '?<sign>[\-\+]';
@@ -19,7 +21,7 @@ final class Number
     private int $match;
     private array $matches = [];
 
-    public function __construct(public readonly string $value)
+    private function __construct(public readonly string $value)
     {
         $pattern = sprintf(
             self::VALID_NUMBER,
@@ -32,16 +34,16 @@ final class Number
             self::DENOMINATOR
         );
 
-        $this->match = preg_match($pattern, $this->value, $this->matches);
+        $this->match = (int)preg_match($pattern, $this->value, $this->matches);
 
         if ($this->isInvalidNumber()) {
             throw new InvalidNumber(value: $this->value);
         }
     }
 
-    public function getIntegral(): ?string
+    public static function from(float|string $value): Number
     {
-        return $this->match(key: 'integral');
+        return new Number(value: (string)$value);
     }
 
     public function getExponent(): ?string
@@ -52,11 +54,6 @@ final class Number
     public function getFractional(): ?string
     {
         return $this->match(key: 'fractional');
-    }
-
-    public function isInvalidNumber(): bool
-    {
-        return ($this->match != 1) || (is_null($this->getIntegral()) && is_null($this->getFractional()));
     }
 
     public function isZero(): bool
@@ -99,5 +96,12 @@ final class Number
         $math = $this->matches[$key] ?? null;
 
         return $math == '' ? null : $math;
+    }
+
+    private function isInvalidNumber(): bool
+    {
+        $integral = $this->match(key: 'integral');
+
+        return ($this->match != 1) || (is_null($integral) && is_null($this->getFractional()));
     }
 }

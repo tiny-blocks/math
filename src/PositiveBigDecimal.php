@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TinyBlocks\Math;
 
 use TinyBlocks\Math\Internal\BigNumberAdapter;
@@ -13,19 +15,20 @@ final class PositiveBigDecimal extends BigNumberAdapter implements BigNumber, Va
 {
     use ValueObjectAdapter;
 
-    private function __construct(float|string $value, ?int $scale)
+    private function __construct(Number $number, Scale $scale)
     {
-        $number = new Number(value: $value);
-
         if ($number->isNegativeOrZero()) {
             throw new NonPositiveNumber(number: $number);
         }
 
-        parent::__construct(number: $number, scale: new Scale(value: $scale));
+        parent::__construct(number: $number, scale: $scale);
     }
 
     public static function from(float|string $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): PositiveBigDecimal
     {
-        return new PositiveBigDecimal(value: $value, scale: $scale);
+        $scale = new Scale(value: $scale);
+        $number = Number::from(value: $value);
+
+        return new PositiveBigDecimal(number: $number, scale: $scale);
     }
 }

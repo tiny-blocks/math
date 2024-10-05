@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TinyBlocks\Math\Internal\Operations;
 
 use TinyBlocks\Math\BigNumber;
-use TinyBlocks\Math\Internal\Operations\Adapters\Dtos\Result;
+use TinyBlocks\Math\Internal\Operations\Adapters\Result;
 
 interface MathOperations
 {
