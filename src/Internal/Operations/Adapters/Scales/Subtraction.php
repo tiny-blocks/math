@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TinyBlocks\Math\Internal\Operations\Adapters\Scales;
 
 use TinyBlocks\Math\BigNumber;
 use TinyBlocks\Math\Internal\Scale;
 
-final class Subtraction
+final readonly class Subtraction
 {
-    private readonly Scale $minuendScale;
-    private readonly Scale $subtrahendScale;
+    private Scale $minuendScale;
+    private Scale $subtrahendScale;
 
-    public function __construct(private readonly BigNumber $minuend, private readonly BigNumber $subtrahend)
+    public function __construct(private BigNumber $minuend, private BigNumber $subtrahend)
     {
         $this->minuendScale = new Scale(value: $this->minuend->getScale());
         $this->subtrahendScale = new Scale(value: $this->subtrahend->getScale());

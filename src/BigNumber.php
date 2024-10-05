@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TinyBlocks\Math;
 
 use TinyBlocks\Math\Internal\Exceptions\DivisionByZero;
@@ -9,129 +11,147 @@ interface BigNumber
     public const AUTOMATIC_SCALE = null;
 
     /**
-     * Performs an addition operation between two values, augend ($this) and addend ($addend).
-     * @param BigNumber $addend
-     * @return BigNumber
+     * Adds the current BigNumber (augend) with another BigNumber (addend).
+     *
+     * @param BigNumber $addend The BigNumber to be added to the current BigNumber.
+     * @return BigNumber A new BigNumber representing the sum of the two numbers.
      */
     public function add(BigNumber $addend): BigNumber;
 
     /**
-     * Performs a subtraction operation between two values, minuend ($this) and subtrahend ($subtrahend).
-     * @param BigNumber $subtrahend
-     * @return BigNumber
+     * Subtracts another BigNumber (subtrahend) from the current BigNumber (minuend).
+     *
+     * @param BigNumber $subtrahend The BigNumber to be subtracted from the current BigNumber.
+     * @return BigNumber A new BigNumber representing the difference between the two numbers.
      */
     public function subtract(BigNumber $subtrahend): BigNumber;
 
     /**
-     * Performs a multiplication operation between two values, multiplicand ($this) and multiplier ($multiplier).
-     * @param BigNumber $multiplier
-     * @return BigNumber
+     * Multiplies the current BigNumber (multiplicand) with another BigNumber (multiplier).
+     *
+     * @param BigNumber $multiplier The BigNumber to multiply the current BigNumber by.
+     * @return BigNumber A new BigNumber representing the product of the two numbers.
      */
     public function multiply(BigNumber $multiplier): BigNumber;
 
     /**
-     * Performs a division operation between two values, dividend ($this) and divisor ($divisor).
-     * @param BigNumber $divisor
-     * @return BigNumber
-     * @throws DivisionByZero — If the divisor has a value of zero.
+     * Divides the current BigNumber (dividend) by another BigNumber (divisor).
+     *
+     * @param BigNumber $divisor The BigNumber to divide the current BigNumber by.
+     * @return BigNumber A new BigNumber representing the quotient of the division.
+     * @throws DivisionByZero If the divisor is zero, this exception is thrown.
      */
     public function divide(BigNumber $divisor): BigNumber;
 
     /**
-     * Returns a BigNumber with the given rounding.
-     * @param RoundingMode $mode
-     * @return BigNumber
+     * Returns a new BigNumber after applying the specified rounding mode.
+     *
+     * @param RoundingMode $mode The rounding mode to apply.
+     * @return BigNumber A new BigNumber rounded according to the specified mode.
      */
     public function withRounding(RoundingMode $mode): BigNumber;
 
     /**
-     * Returns a BigNumber with the given scale.
-     * @param int $scale
-     * @return BigNumber
+     * Returns a new BigNumber with the specified scale.
+     *
+     * @param int $scale The scale to apply to the BigNumber.
+     * @return BigNumber A new BigNumber with the specified scale.
      */
     public function withScale(int $scale): BigNumber;
 
     /**
-     * Returns the current BigNumber with the negated value,
-     * from a multiplication operation between two values, multiplying ($this) and multiplier (-1).
-     * @return BigNumber
+     * Returns a new BigNumber with the negated value of the current BigNumber.
+     *
+     * @return BigNumber A new BigNumber representing the negated value of the current number.
      */
     public function negate(): BigNumber;
 
     /**
-     * Returns the scale value.
-     * @return int|null
+     * Retrieves the scale of the current BigNumber.
+     *
+     * @return int|null The scale of the current BigNumber, or null if no scale is applied.
      */
     public function getScale(): ?int;
 
     /**
-     * Checks if the BigNumber value is zero.
-     * @return bool
+     * Determines if the current BigNumber is equal to zero.
+     *
+     * @return bool True if the BigNumber is zero, otherwise false.
      */
     public function isZero(): bool;
 
     /**
-     * Checks if the BigNumber value is negative.
-     * @return bool
+     * Determines if the current BigNumber is negative.
+     *
+     * @return bool True if the BigNumber is negative, otherwise false.
      */
     public function isNegative(): bool;
 
     /**
-     * Checks if the BigNumber value is positive.
-     * @return bool
+     * Determines if the current BigNumber is positive.
+     *
+     * @return bool True if the BigNumber is positive, otherwise false.
      */
     public function isPositive(): bool;
 
     /**
-     * Checks whether the BigNumber value is negative or zero.
-     * @return bool
+     * Determines if the current BigNumber is either negative or zero.
+     *
+     * @return bool True if the BigNumber is negative or zero, otherwise false.
      */
     public function isNegativeOrZero(): bool;
 
     /**
-     * Checks whether the BigNumber value is positive or zero.
-     * @return bool
+     * Determines if the current BigNumber is either positive or zero.
+     *
+     * @return bool True if the BigNumber is positive or zero, otherwise false.
      */
     public function isPositiveOrZero(): bool;
 
     /**
-     * Checks if the value of ($this) is less than the value of ($other).
-     * @param BigNumber $other
-     * @return bool
+     * Compares the current BigNumber with another BigNumber to determine if it is less.
+     *
+     * @param BigNumber $other The BigNumber to compare with.
+     * @return bool True if the current BigNumber is less than the other BigNumber, otherwise false.
      */
     public function isLessThan(BigNumber $other): bool;
 
     /**
-     * Checks if the value of ($this) is greater than the value of ($other).
-     * @param BigNumber $other
-     * @return bool
+     * Compares the current BigNumber with another BigNumber to determine if it is greater.
+     *
+     * @param BigNumber $other The BigNumber to compare with.
+     * @return bool True if the current BigNumber is greater than the other BigNumber, otherwise false.
      */
     public function isGreaterThan(BigNumber $other): bool;
 
     /**
-     * Checks if the value of ($this) is less than or equal the value of ($other).
-     * @param BigNumber $other
-     * @return bool
+     * Compares the current BigNumber with another BigNumber to determine if it is less than or equal.
+     *
+     * @param BigNumber $other The BigNumber to compare with.
+     * @return bool True if the current BigNumber is less than or equal to the other BigNumber, otherwise false.
      */
     public function isLessThanOrEqual(BigNumber $other): bool;
 
     /**
-     * Checks if the value of ($this) is greater than or equal the value of ($other).
-     * @param BigNumber $other
-     * @return bool
+     * Compares the current BigNumber with another BigNumber to determine if it is greater than or equal.
+     *
+     * @param BigNumber $other The BigNumber to compare with.
+     * @return bool True if the current BigNumber is greater than or equal to the other BigNumber, otherwise false.
      */
     public function isGreaterThanOrEqual(BigNumber $other): bool;
 
     /**
-     * Converts this BigNumber to a float. Note that even when the return value is finite,
-     * this conversion can lose information about the precision of the BigNumber value.
-     * @return float
+     * Converts the current BigNumber to a floating-point number.
+     * Note: Precision may be lost during conversion.
+     *
+     * @return float The floating-point representation of the BigNumber.
      */
     public function toFloat(): float;
 
     /**
-     * Converts this BigNumber to a string.
-     * @return string
+     * Converts the current BigNumber to a string representation.
+     *
+     * @return string The string representation of the BigNumber.
      */
     public function toString(): string;
 }

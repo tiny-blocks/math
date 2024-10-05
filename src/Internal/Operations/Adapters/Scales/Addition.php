@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TinyBlocks\Math\Internal\Operations\Adapters\Scales;
 
 use TinyBlocks\Math\BigNumber;
 use TinyBlocks\Math\Internal\Scale;
 
-final class Addition implements Scales
+final readonly class Addition implements Scales
 {
-    private readonly Scale $augendScale;
-    private readonly Scale $addendScale;
+    private Scale $augendScale;
+    private Scale $addendScale;
 
-    public function __construct(private readonly BigNumber $augend, private readonly BigNumber $addend)
+    public function __construct(private BigNumber $augend, private BigNumber $addend)
     {
         $this->augendScale = new Scale(value: $this->augend->getScale());
         $this->addendScale = new Scale(value: $this->addend->getScale());

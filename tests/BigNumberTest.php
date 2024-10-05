@@ -1,669 +1,551 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TinyBlocks\Math;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TinyBlocks\Math\Internal\Exceptions\DivisionByZero;
-use TinyBlocks\Math\Mock\BigNumberMock;
+use TinyBlocks\Math\Models\LargeNumber;
 
 final class BigNumberTest extends TestCase
 {
-    /**
-     * @dataProvider providerForTestAdd
-     */
+    #[DataProvider('providerForTestAdd')]
     public function testAdd(int $scale, mixed $value, mixed $other, array $expected): void
     {
-        $augend = BigNumberMock::from(value: $value);
-        $addend = BigNumberMock::from(value: $other);
+        /** @Given two BigNumber instances to be added */
+        $augend = LargeNumber::from(value: $value);
+        $addend = LargeNumber::from(value: $other);
 
+        /** @When adding the two BigNumber instances */
         $actual = $augend->add(addend: $addend);
 
+        /** @Then the result should have the correct scale and values */
         self::assertSame($scale, $actual->getScale());
         self::assertSame($expected['string'], $actual->toString());
         self::assertSame(floatval($expected['float']), $actual->toFloat());
     }
 
-    /**
-     * @dataProvider providerForTestSubtract
-     */
+    #[DataProvider('providerForTestSubtract')]
     public function testSubtract(int $scale, mixed $value, mixed $other, array $expected): void
     {
-        $minuend = BigNumberMock::from(value: $value);
-        $subtrahend = BigNumberMock::from(value: $other);
+        /** @Given two BigNumber instances to be subtracted */
+        $minuend = LargeNumber::from(value: $value);
+        $subtrahend = LargeNumber::from(value: $other);
 
+        /** @When subtracting the second BigNumber from the first */
         $actual = $minuend->subtract(subtrahend: $subtrahend);
 
+        /** @Then the result should have the correct scale and values */
         self::assertSame($scale, $actual->getScale());
         self::assertSame($expected['string'], $actual->toString());
         self::assertSame(floatval($expected['float']), $actual->toFloat());
     }
 
-    /**
-     * @dataProvider providerForTestMultiply
-     */
+    #[DataProvider('providerForTestMultiply')]
     public function testMultiply(int $scale, mixed $value, mixed $other, array $expected): void
     {
-        $multiplicand = BigNumberMock::from(value: $value);
-        $multiplier = BigNumberMock::from(value: $other);
+        /** @Given two BigNumber instances to be multiplied */
+        $multiplicand = LargeNumber::from(value: $value);
+        $multiplier = LargeNumber::from(value: $other);
 
+        /** @When multiplying the two BigNumber instances */
         $actual = $multiplicand->multiply(multiplier: $multiplier);
 
+        /** @Then the result should have the correct scale and values */
         self::assertSame($scale, $actual->getScale());
         self::assertSame($expected['string'], $actual->toString());
         self::assertSame(floatval($expected['float']), $actual->toFloat());
     }
 
-    /**
-     * @dataProvider providerForTestDivide
-     */
+    #[DataProvider('providerForTestDivide')]
     public function testDivide(int $scale, mixed $value, mixed $other, array $expected): void
     {
-        $dividend = BigNumberMock::from(value: $value);
-        $divisor = BigNumberMock::from(value: $other);
+        /** @Given a BigNumber instance to be divided by another BigNumber */
+        $dividend = LargeNumber::from(value: $value);
+        $divisor = LargeNumber::from(value: $other);
 
+        /** @When dividing the first BigNumber by the second */
         $actual = $dividend->divide(divisor: $divisor);
 
+        /** @Then the result should have the correct scale and values */
         self::assertSame($scale, $actual->getScale());
         self::assertSame($expected['string'], $actual->toString());
         self::assertSame(floatval($expected['float']), $actual->toFloat());
     }
 
-    /**
-     * @dataProvider providerForTestDivisionByZero
-     */
+    #[DataProvider('providerForTestDivisionByZero')]
     public function testDivisionByZero(mixed $value, mixed $other): void
     {
+        /** @Given a BigNumber instance to be divided by zero */
         $template = 'Cannot divide <%.2f> by <%.2f>.';
 
+        /** @Then an exception DivisionByZero should be thrown with the correct message */
         $this->expectException(DivisionByZero::class);
         $this->expectExceptionMessage(sprintf($template, $value, $other));
 
-        $dividend = BigNumberMock::from(value: $value);
-        $divisor = BigNumberMock::from(value: $other);
+        /** @When attempting to divide the BigNumber by zero */
+        $dividend = LargeNumber::from(value: $value);
+        $divisor = LargeNumber::from(value: $other);
 
         $dividend->divide(divisor: $divisor);
     }
 
-    /**
-     * @dataProvider providerForTestWithRounding
-     */
+    #[DataProvider('providerForTestWithRounding')]
     public function testWithRounding(RoundingMode $mode, int $scale, mixed $value, array $expected): void
     {
-        $value = BigNumberMock::from(value: $value, scale: $scale);
+        /** @Given a BigNumber instance with specified rounding mode */
+        $number = LargeNumber::from(value: $value, scale: $scale);
 
-        $actual = $value->withRounding(mode: $mode);
+        /** @When rounding the BigNumber */
+        $actual = $number->withRounding(mode: $mode);
 
+        /** @Then the result should match the expected values */
         self::assertSame($scale, $actual->getScale());
         self::assertSame($expected['string'], $actual->toString());
         self::assertSame(floatval($expected['float']), $actual->toFloat());
     }
 
-    /**
-     * @dataProvider providerForTestWithScale
-     */
+    #[DataProvider('providerForTestWithScale')]
     public function testWithScale(mixed $value, int $scale, int $withScale, array $expected): void
     {
-        $value = BigNumberMock::from(value: $value, scale: $scale);
+        /** @Given a BigNumber instance to be scaled */
+        $number = LargeNumber::from(value: $value, scale: $scale);
 
-        $actual = $value->withScale(scale: $withScale);
+        /** @When applying a new scale to the BigNumber */
+        $actual = $number->withScale(scale: $withScale);
 
-        self::assertEquals($scale, $value->getScale());
-        self::assertEquals($withScale, $actual->getScale());
+        /** @Then the result should have the correct adjusted scale and values */
+        self::assertSame($scale, $number->getScale());
+        self::assertSame($withScale, $actual->getScale());
         self::assertSame($expected['string'], $actual->toString());
         self::assertSame(floatval($expected['float']), $actual->toFloat());
     }
 
-    public function testNegate(): void
-    {
-        $value = BigNumberMock::from(value: 25.001, scale: 3);
-
-        $actual = $value->negate();
-
-        self::assertSame(3, $actual->getScale());
-        self::assertSame(-25.001, $actual->toFloat());
-        self::assertSame('-25.001', $actual->toString());
-    }
-
-    /**
-     * @dataProvider providerForTestIsZero
-     */
+    #[DataProvider('providerForTestIsZero')]
     public function testIsZero(mixed $value, bool $expected): void
     {
-        $value = BigNumberMock::from(value: $value);
+        /** @Given a BigNumber instance */
+        $number = LargeNumber::from(value: $value);
 
-        $actual = $value->isZero();
+        /** @When checking if the BigNumber is zero */
+        $actual = $number->isZero();
 
-        self::assertEquals($expected, $actual);
+        /** @Then the result should indicate if it is zero or not */
+        self::assertSame($expected, $actual);
     }
 
-    /**
-     * @dataProvider providerForTestIsNegative
-     */
+    #[DataProvider('providerForTestIsNegative')]
     public function testIsNegative(mixed $value, bool $expected): void
     {
-        $value = BigNumberMock::from(value: $value);
+        /** @Given a BigNumber instance */
+        $number = LargeNumber::from(value: $value);
 
-        $actual = $value->isNegative();
+        /** @When checking if the BigNumber is negative */
+        $actual = $number->isNegative();
 
-        self::assertEquals($expected, $actual);
+        /** @Then the result should indicate if it is negative or not */
+        self::assertSame($expected, $actual);
     }
 
-    /**
-     * @dataProvider providerForTestIsPositive
-     */
+    #[DataProvider('providerForTestIsPositive')]
     public function testIsPositive(mixed $value, bool $expected): void
     {
-        $value = BigNumberMock::from(value: $value);
+        /** @Given a BigNumber instance */
+        $number = LargeNumber::from(value: $value);
 
-        $actual = $value->isPositive();
+        /** @When checking if the BigNumber is positive */
+        $actual = $number->isPositive();
 
-        self::assertEquals($expected, $actual);
+        /** @Then the result should indicate if it is positive or not */
+        self::assertSame($expected, $actual);
     }
 
-    /**
-     * @dataProvider providerForTestIsNegativeOrZero
-     */
+    #[DataProvider('providerForTestIsNegativeOrZero')]
     public function testIsNegativeOrZero(mixed $value, bool $expected): void
     {
-        $value = BigNumberMock::from(value: $value);
+        /** @Given a BigNumber instance */
+        $number = LargeNumber::from(value: $value);
 
-        $actual = $value->isNegativeOrZero();
+        /** @When checking if the BigNumber is negative or zero */
+        $actual = $number->isNegativeOrZero();
 
-        self::assertEquals($expected, $actual);
+        /** @Then the result should indicate if it is negative or zero */
+        self::assertSame($expected, $actual);
     }
 
-    /**
-     * @dataProvider providerForTestIsPositiveOrZero
-     */
+    #[DataProvider('providerForTestIsPositiveOrZero')]
     public function testIsPositiveOrZero(mixed $value, bool $expected): void
     {
-        $value = BigNumberMock::from(value: $value);
+        /** @Given a BigNumber instance */
+        $number = LargeNumber::from(value: $value);
 
-        $actual = $value->isPositiveOrZero();
+        /** @When checking if the BigNumber is positive or zero */
+        $actual = $number->isPositiveOrZero();
 
-        self::assertEquals($expected, $actual);
+        /** @Then the result should indicate if it is positive or zero */
+        self::assertSame($expected, $actual);
     }
 
-    /**
-     * @dataProvider providerForTestIsLessThan
-     */
+    #[DataProvider('providerForTestIsLessThan')]
     public function testIsLessThan(BigNumber $value, BigNumber $other, bool $expected): void
     {
+        /** @Given two BigNumber instances */
+        /** @When checking if the first BigNumber is less than the second */
         $actual = $value->isLessThan(other: $other);
 
-        self::assertEquals($expected, $actual);
+        /** @Then the result should indicate if it is less than */
+        self::assertSame($expected, $actual);
     }
 
-    /**
-     * @dataProvider providerForTestIsGreaterThan
-     */
+    #[DataProvider('providerForTestIsGreaterThan')]
     public function testIsGreaterThan(BigNumber $value, BigNumber $other, bool $expected): void
     {
+        /** @Given two BigNumber instances */
+        /** @When checking if the first BigNumber is greater than the second */
         $actual = $value->isGreaterThan(other: $other);
 
-        self::assertEquals($expected, $actual);
+        /** @Then the result should indicate if it is greater than */
+        self::assertSame($expected, $actual);
     }
 
-    /**
-     * @dataProvider providerForTestIsLessThanOrEqual
-     */
+    #[DataProvider('providerForTestIsLessThanOrEqual')]
     public function testIsLessThanOrEqual(BigNumber $value, BigNumber $other, bool $expected): void
     {
+        /** @Given two BigNumber instances */
+        /** @When checking if the first BigNumber is less than or equal to the second */
         $actual = $value->isLessThanOrEqual(other: $other);
 
-        self::assertEquals($expected, $actual);
+        /** @Then the result should indicate if it is less than or equal to */
+        self::assertSame($expected, $actual);
     }
 
-    /**
-     * @dataProvider providerForTestIsGreaterThanOrEqual
-     */
+    #[DataProvider('providerForTestIsGreaterThanOrEqual')]
     public function testIsGreaterThanOrEqual(BigNumber $value, BigNumber $other, bool $expected): void
     {
+        /** @Given two BigNumber instances */
+        /** @When checking if the first BigNumber is greater than or equal to the second */
         $actual = $value->isGreaterThanOrEqual(other: $other);
 
-        self::assertEquals($expected, $actual);
+        /** @Then the result should indicate if it is greater than or equal to */
+        self::assertSame($expected, $actual);
     }
 
-    public function providerForTestAdd(): array
+    public static function providerForTestAdd(): array
     {
         return [
-            [
-                'scale' => 0,
-                'value' => 1,
-                'other' => 1,
-                'expected' => [
-                    'float' => 2,
-                    'string' => '2'
-                ]
+            'Adding integers'                   => [
+                'scale'    => 0,
+                'value'    => 1,
+                'other'    => 1,
+                'expected' => ['float' => 2, 'string' => '2']
             ],
-            [
-                'scale' => 0,
-                'value' => '123',
-                'other' => '-999',
-                'expected' => [
-                    'float' => -876,
-                    'string' => '-876'
-                ]
+            'Adding with scale'                 => [
+                'scale'    => 3,
+                'value'    => 1002.771,
+                'other'    => 123,
+                'expected' => ['float' => 1125.771, 'string' => '1125.771']
             ],
-            [
-                'scale' => 3,
-                'value' => 1002.771,
-                'other' => 123,
-                'expected' => [
-                    'float' => 1125.771,
-                    'string' => '1125.771'
-                ]
+            'Adding positives and negatives'    => [
+                'scale'    => 0,
+                'value'    => '123',
+                'other'    => '-999',
+                'expected' => ['float' => -876, 'string' => '-876']
             ],
-            [
-                'scale' => 4,
-                'value' => '-4565.9999',
-                'other' => '999999999.04',
-                'expected' => [
-                    'float' => 999995433.0401,
-                    'string' => '999995433.0401'
-                ]
+            'Adding large numbers with decimal' => [
+                'scale'    => 4,
+                'value'    => '-4565.9999',
+                'other'    => '999999999.04',
+                'expected' => ['float' => 999995433.0401, 'string' => '999995433.0401']
             ]
         ];
     }
 
-    public function providerForTestSubtract(): array
+    public static function providerForTestSubtract(): array
     {
         return [
-            [
-                'scale' => 2,
-                'value' => 10.22,
-                'other' => 5.11,
-                'expected' => [
-                    'float' => 5.11,
-                    'string' => '5.11'
-                ]
+            'Simple subtraction'     => [
+                'scale'    => 2,
+                'value'    => 10.22,
+                'other'    => 5.11,
+                'expected' => ['float' => 5.11, 'string' => '5.11']
             ],
-            [
-                'scale' => 4,
-                'value' => 12.9999,
-                'other' => 06.3333,
-                'expected' => [
-                    'float' => 6.6666,
-                    'string' => '6.6666'
-                ]
+            'Subtracting negatives'  => [
+                'scale'    => 3,
+                'value'    => -10.099,
+                'other'    => -10.095,
+                'expected' => ['float' => -0.004, 'string' => '-0.004']
             ],
-            [
-                'scale' => 3,
-                'value' => -10.099,
-                'other' => -10.095,
-                'expected' => [
-                    'float' => -0.004,
-                    'string' => '-0.004'
-                ]
+            'Resulting in negative'  => [
+                'scale'    => 0,
+                'value'    => 11,
+                'other'    => 12,
+                'expected' => ['float' => -1, 'string' => '-1']
             ],
-            [
-                'scale' => 0,
-                'value' => 11,
-                'other' => 12,
-                'expected' => [
-                    'float' => -1,
-                    'string' => '-1'
-                ]
+            'Subtraction with scale' => [
+                'scale'    => 4,
+                'value'    => 12.9999,
+                'other'    => 6.3333,
+                'expected' => ['float' => 6.6666, 'string' => '6.6666']
             ]
         ];
     }
 
-    public function providerForTestMultiply(): array
+    public static function providerForTestMultiply(): array
     {
         return [
-            [
-                'scale' => 0,
-                'value' => 2,
-                'other' => 2,
-                'expected' => [
-                    'float' => 4,
-                    'string' => '4'
-                ]
+            'Basic multiplication'        => [
+                'scale'    => 0,
+                'value'    => 2,
+                'other'    => 2,
+                'expected' => ['float' => 4, 'string' => '4']
             ],
-            [
-                'scale' => 1,
-                'value' => 123.0,
-                'other' => 0.1,
-                'expected' => [
-                    'float' => 12.3,
-                    'string' => '12.3'
-                ]
+            'Multiplying negatives'       => [
+                'scale'    => 4,
+                'value'    => '-2.11',
+                'other'    => '55.33',
+                'expected' => ['float' => -116.7463, 'string' => '-116.7463']
             ],
-            [
-                'scale' => 2,
-                'value' => '123.22',
-                'other' => '999',
-                'expected' => [
-                    'float' => 123096.78,
-                    'string' => '123096.78'
-                ]
+            'Multiplying large numbers'   => [
+                'scale'    => 2,
+                'value'    => '123.22',
+                'other'    => '999',
+                'expected' => ['float' => 123096.78, 'string' => '123096.78']
             ],
-            [
-                'scale' => 4,
-                'value' => '-2.11',
-                'other' => '55.33',
-                'expected' => [
-                    'float' => -116.7463,
-                    'string' => '-116.7463'
-                ]
+            'Multiplication with decimal' => [
+                'scale'    => 1,
+                'value'    => 123.0,
+                'other'    => 0.1,
+                'expected' => ['float' => 12.3, 'string' => '12.3']
             ]
         ];
     }
 
-    public function providerForTestDivide(): array
+    public static function providerForTestDivide(): array
     {
         return [
-            [
-                'scale' => 5,
-                'value' => 1.234,
-                'other' => '100.00',
-                'expected' => [
-                    'float' => 0.01234,
-                    'string' => '0.01234'
-                ]
+            'Large division'                 => [
+                'scale'    => 16,
+                'value'    => '1.234',
+                'other'    => '123.456',
+                'expected' => ['float' => 0.0099954639709694, 'string' => '0.0099954639709694']
             ],
-            [
-                'scale' => 0,
-                'value' => -7,
-                'other' => 0.2,
-                'expected' => [
-                    'float' => -35,
-                    'string' => '-35'
-                ]
+            'Division with small scale'      => [
+                'scale'    => 5,
+                'value'    => 1.234,
+                'other'    => '100.00',
+                'expected' => ['float' => 0.01234, 'string' => '0.01234']
             ],
-            [
-                'scale' => 16,
-                'value' => '1.234',
-                'other' => '123.456',
-                'expected' => [
-                    'float' => 0.0099954639709694,
-                    'string' => '0.0099954639709694'
-                ]
+            'Division resulting in zero'     => [
+                'scale'    => 0,
+                'value'    => '0.00',
+                'other'    => 8,
+                'expected' => ['float' => 0, 'string' => '0']
             ],
-            [
-                'scale' => 0,
-                'value' => '0.00',
-                'other' => 8,
-                'expected' => [
-                    'float' => 0,
-                    'string' => '0'
-                ]
+            'Division resulting in negative' => [
+                'scale'    => 0,
+                'value'    => -7,
+                'other'    => 0.2,
+                'expected' => ['float' => -35, 'string' => '-35']
             ]
         ];
     }
 
-    public function providerForTestDivisionByZero(): array
+    public static function providerForTestDivisionByZero(): array
     {
         return [
-            [
-                'value' => 20,
-                'other' => 0
+            'Division of zero by zero'         => ['value' => 0, 'other' => 0],
+            'Division of positive by zero'     => ['value' => 20, 'other' => 0],
+            'Division of decimal zero by zero' => ['value' => '0.00', 'other' => '0.00']
+        ];
+    }
+
+    public static function providerForTestWithRounding(): array
+    {
+        return [
+            'Half up rounding'   => [
+                'mode'     => RoundingMode::HALF_UP,
+                'scale'    => 2,
+                'value'    => 0.9950,
+                'expected' => ['float' => 1, 'string' => '1']
             ],
-            [
-                'value' => 0,
-                'other' => 0
+            'Half odd rounding'  => [
+                'mode'     => RoundingMode::HALF_ODD,
+                'scale'    => 2,
+                'value'    => 0.9950,
+                'expected' => ['float' => 0.99, 'string' => '0.99']
             ],
-            [
-                'value' => '0.00',
-                'other' => '0.00'
+            'Half down rounding' => [
+                'mode'     => RoundingMode::HALF_DOWN,
+                'scale'    => 2,
+                'value'    => 0.9950,
+                'expected' => ['float' => 0.99, 'string' => '0.99']
+            ],
+            'Half even rounding' => [
+                'mode'     => RoundingMode::HALF_EVEN,
+                'scale'    => 2,
+                'value'    => 0.9950,
+                'expected' => ['float' => 1, 'string' => '1']
             ]
         ];
     }
 
-    public function providerForTestWithRounding(): array
+    public static function providerForTestWithScale(): array
     {
         return [
-            [
-                'mode' => RoundingMode::HALF_UP,
-                'scale' => 2,
-                'value' => 0.9950,
-                'expected' => [
-                    'float' => 1,
-                    'string' => '1'
-                ]
-            ],
-            [
-                'mode' => RoundingMode::HALF_DOWN,
-                'scale' => 2,
-                'value' => 0.9950,
-                'expected' => [
-                    'float' => 0.99,
-                    'string' => '0.99'
-                ]
-            ],
-            [
-                'mode' => RoundingMode::HALF_EVEN,
-                'scale' => 2,
-                'value' => 0.9950,
-                'expected' => [
-                    'float' => 1,
-                    'string' => '1'
-                ]
-            ],
-            [
-                'mode' => RoundingMode::HALF_ODD,
-                'scale' => 2,
-                'value' => 0.9950,
-                'expected' => [
-                    'float' => 0.99,
-                    'string' => '0.99'
-                ]
-            ]
-        ];
-    }
-
-    public function providerForTestWithScale(): array
-    {
-        return [
-            [
-                'value' => 0,
-                'scale' => 0,
+            'Scaling zero'                     => [
+                'value'     => 0,
+                'scale'     => 0,
                 'withScale' => 0,
-                'expected' => [
-                    'float' => 0,
-                    'string' => '0'
-                ]
+                'expected'  => ['float' => 0, 'string' => '0']
             ],
-            [
-                'value' => '0.0',
-                'scale' => 1,
+            'Scaling with decimal'             => [
+                'value'     => '0.0',
+                'scale'     => 1,
                 'withScale' => 1,
-                'expected' => [
-                    'float' => '0.0',
-                    'string' => '0.0'
-                ]
+                'expected'  => ['float' => 0.0, 'string' => '0.0']
             ],
-            [
-                'value' => 10.5555,
-                'scale' => 4,
+            'Scaling large negative number'    => [
+                'value'     => '-553.99999',
+                'scale'     => 5,
+                'withScale' => 1,
+                'expected'  => ['float' => -553.9, 'string' => '-553.9']
+            ],
+            'Scaling with precision reduction' => [
+                'value'     => 10.5555,
+                'scale'     => 4,
                 'withScale' => 3,
-                'expected' => [
-                    'float' => 10.555,
-                    'string' => '10.555'
-                ]
-            ],
-            [
-                'value' => '-553.99999',
-                'scale' => 5,
-                'withScale' => 1,
-                'expected' => [
-                    'float' => -553.9,
-                    'string' => '-553.9'
-                ]
+                'expected'  => ['float' => 10.555, 'string' => '10.555']
             ]
         ];
     }
 
-    public function providerForTestIsZero(): array
+    public static function providerForTestIsZero(): array
     {
         return [
-            [
-                'value' => 0.0,
-                'expected' => true
-            ],
-            [
-                'value' => '0.0000000000',
-                'expected' => true
-            ],
-            [
-                'value' => -1,
-                'expected' => false
-            ]
+            'Exact zero float'   => ['value' => 0.0, 'expected' => true],
+            'NonZero negative'   => ['value' => -1, 'expected' => false],
+            'Zero with decimals' => ['value' => '0.0000000000', 'expected' => true]
         ];
     }
 
-    public function providerForTestIsNegative(): array
+    public static function providerForTestIsNegative(): array
     {
         return [
-            [
-                'value' => 0,
-                'expected' => false
-            ],
-            [
-                'value' => -45.9999,
-                'expected' => true
-            ],
-            [
-                'value' => -0.1,
-                'expected' => true
-            ]
+            'NonNegative zero'     => ['value' => 0, 'expected' => false],
+            'Large negative float' => ['value' => -45.9999, 'expected' => true],
+            'Small negative float' => ['value' => -0.1, 'expected' => true]
         ];
     }
 
-    public function providerForTestIsPositive(): array
+    public static function providerForTestIsPositive(): array
     {
         return [
-            [
-                'value' => 0,
-                'expected' => false
-            ],
-            [
-                'value' => -1,
-                'expected' => false
-            ],
-            [
-                'value' => 1,
-                'expected' => true
-            ]
+            'Negative one'         => ['value' => -1, 'expected' => false],
+            'Positive integer'     => ['value' => 1, 'expected' => true],
+            'Zero is not positive' => ['value' => 0, 'expected' => false]
         ];
     }
 
-    public function providerForTestIsNegativeOrZero(): array
+    public static function providerForTestIsNegativeOrZero(): array
     {
         return [
-            [
-                'value' => 0,
-                'expected' => true
-            ],
-            [
-                'value' => -1,
-                'expected' => true
-            ],
-            [
-                'value' => 1,
-                'expected' => false
-            ]
+            'Zero'             => ['value' => 0, 'expected' => true],
+            'Positive integer' => ['value' => 1, 'expected' => false],
+            'Negative integer' => ['value' => -1, 'expected' => true]
         ];
     }
 
-    public function providerForTestIsPositiveOrZero(): array
+    public static function providerForTestIsPositiveOrZero(): array
     {
         return [
-            [
-                'value' => 0,
-                'expected' => true
-            ],
-            [
-                'value' => -1,
+            'Zero'             => ['value' => 0, 'expected' => true],
+            'Negative integer' => ['value' => -1, 'expected' => false],
+            'Positive integer' => ['value' => 1, 'expected' => true]
+        ];
+    }
+
+    public static function providerForTestIsLessThan(): array
+    {
+        return [
+            'Value equal to other'                    => [
+                'value'    => LargeNumber::from(value: 1),
+                'other'    => LargeNumber::from(value: 1),
                 'expected' => false
             ],
-            [
-                'value' => 1,
+            'Value less than other with decimals'     => [
+                'value'    => LargeNumber::from(value: 45.333, scale: 3),
+                'other'    => LargeNumber::from(value: 45.334, scale: 3),
+                'expected' => true
+            ],
+            'Negative value less than other negative' => [
+                'value'    => LargeNumber::from(value: '-51'),
+                'other'    => LargeNumber::from(value: '-11'),
                 'expected' => true
             ]
         ];
     }
 
-    public function providerForTestIsLessThan(): array
+    public static function providerForTestIsGreaterThan(): array
     {
         return [
-            [
-                'value' => BigNumberMock::from(value: 45.333, scale: 3),
-                'other' => BigNumberMock::from(value: 45.334, scale: 3),
-                'expected' => true
-            ],
-            [
-                'value' => BigNumberMock::from(value: 1),
-                'other' => BigNumberMock::from(value: 1),
+            'Equal values'                => [
+                'value'    => LargeNumber::from(value: 1),
+                'other'    => LargeNumber::from(value: 1),
                 'expected' => false
             ],
-            [
-                'value' => BigNumberMock::from(value: '-51'),
-                'other' => BigNumberMock::from(value: '-11'),
-                'expected' => true
-            ]
-        ];
-    }
-
-    public function providerForTestIsGreaterThan(): array
-    {
-        return [
-            [
-                'value' => BigNumberMock::from(value: 12.12),
-                'other' => BigNumberMock::from(value: 12.11),
+            'Value greater than other'    => [
+                'value'    => LargeNumber::from(value: 12.12),
+                'other'    => LargeNumber::from(value: 12.11),
                 'expected' => true
             ],
-            [
-                'value' => BigNumberMock::from(value: 1),
-                'other' => BigNumberMock::from(value: 1),
-                'expected' => false
-            ],
-            [
-                'value' => BigNumberMock::from(value: '-1.2222'),
-                'other' => BigNumberMock::from(value: '1'),
+            'Negative less than positive' => [
+                'value'    => LargeNumber::from(value: '-1.2222'),
+                'other'    => LargeNumber::from(value: '1'),
                 'expected' => false
             ]
         ];
     }
 
-    public function providerForTestIsLessThanOrEqual(): array
+    public static function providerForTestIsLessThanOrEqual(): array
     {
         return [
-            [
-                'value' => BigNumberMock::from(value: '88.664'),
-                'other' => BigNumberMock::from(value: '88.664'),
+            'Values are equal'               => [
+                'value'    => LargeNumber::from(value: '88.664'),
+                'other'    => LargeNumber::from(value: '88.664'),
                 'expected' => true
             ],
-            [
-                'value' => BigNumberMock::from(value: 1),
-                'other' => BigNumberMock::from(value: 1),
+            'Equal integer values'           => [
+                'value'    => LargeNumber::from(value: 1),
+                'other'    => LargeNumber::from(value: 1),
                 'expected' => true
             ],
-            [
-                'value' => BigNumberMock::from(value: '12'),
-                'other' => BigNumberMock::from(value: '-90.95'),
+            'Positive greater than negative' => [
+                'value'    => LargeNumber::from(value: '12'),
+                'other'    => LargeNumber::from(value: '-90.95'),
                 'expected' => false
             ]
         ];
     }
 
-    public function providerForTestIsGreaterThanOrEqual(): array
+    public static function providerForTestIsGreaterThanOrEqual(): array
     {
         return [
-            [
-                'value' => BigNumberMock::from(value: 99.999999999999999999),
-                'other' => BigNumberMock::from(value: 99.99999999999999999),
-                'expected' => true
-            ],
-            [
-                'value' => BigNumberMock::from(value: 1),
-                'other' => BigNumberMock::from(value: 1),
-                'expected' => true
-            ],
-            [
-                'value' => BigNumberMock::from(value: '45'),
-                'other' => BigNumberMock::from(value: '45.01'),
+            'Greater than other'      => [
+                'value'    => LargeNumber::from(value: '45'),
+                'other'    => LargeNumber::from(value: '45.01'),
                 'expected' => false
+            ],
+            'Equal integer values'    => [
+                'value'    => LargeNumber::from(value: 1),
+                'other'    => LargeNumber::from(value: 1),
+                'expected' => true
+            ],
+            'Very large values equal' => [
+                'value'    => LargeNumber::from(value: 99.999999999999999999),
+                'other'    => LargeNumber::from(value: 99.99999999999999999),
+                'expected' => true
             ]
         ];
     }

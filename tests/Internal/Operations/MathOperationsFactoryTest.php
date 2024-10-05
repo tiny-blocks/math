@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TinyBlocks\Math\Internal\Operations;
 
-use TinyBlocks\Math\Internal\Exceptions\MathOperationsNotAvailable;
-use TinyBlocks\Math\Mock\ExtensionAdapterMock;
 use PHPUnit\Framework\TestCase;
+use TinyBlocks\Math\Internal\Exceptions\MathOperationsNotAvailable;
+use TinyBlocks\Math\Mocks\ExtensionAdapterMock;
 
 final class MathOperationsFactoryTest extends TestCase
 {
