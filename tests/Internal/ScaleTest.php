@@ -1,51 +1,56 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TinyBlocks\Math\Internal;
 
-use TinyBlocks\Math\Internal\Exceptions\InvalidScale;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use TinyBlocks\Math\Internal\Exceptions\InvalidScale;
 
 final class ScaleTest extends TestCase
 {
-    /**
-     * @dataProvider providerForTestValidScale
-     */
+    #[DataProvider('validScaleDataProvider')]
     public function testValidScale(int $value): void
     {
+        /** @Given a valid scale value */
         $scale = new Scale(value: $value);
 
+        /** @When retrieving the scale value */
         $actual = $scale->value;
 
+        /** @Then the scale value should match the expected value */
         self::assertEquals($value, $actual);
     }
 
-    /**
-     * @dataProvider providerForTestInvalidScale
-     */
+    #[DataProvider('invalidScaleDataProvider')]
     public function testInvalidScale(int $value): void
     {
+        /** @Given an invalid scale value */
         $template = 'Scale value <%s> is invalid. The value must be between <%s> and <%s>.';
 
+        /** @Then an InvalidScale exception should be thrown */
         $this->expectException(InvalidScale::class);
         $this->expectExceptionMessage(sprintf($template, $value, 0, 2147483647));
 
+        /** @When attempting to create a Scale with the invalid value */
         new Scale(value: $value);
     }
 
-    public function providerForTestValidScale(): array
+    public static function validScaleDataProvider(): array
     {
         return [
-            [0],
-            [2147483647]
+            'Minimum valid scale' => ['value' => 0],
+            'Maximum valid scale' => ['value' => 2147483647]
         ];
     }
 
-    public function providerForTestInvalidScale(): array
+    public static function invalidScaleDataProvider(): array
     {
         return [
-            [2147483648],
-            [PHP_INT_MAX],
-            [PHP_INT_MIN]
+            'PHP integer maximum'     => ['value' => PHP_INT_MAX],
+            'PHP integer minimum'     => ['value' => PHP_INT_MIN],
+            'Exceeding maximum scale' => ['value' => 2147483648]
         ];
     }
 }

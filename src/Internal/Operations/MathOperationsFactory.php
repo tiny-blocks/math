@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TinyBlocks\Math\Internal\Operations;
 
 use TinyBlocks\Math\Internal\Exceptions\MathOperationsNotAvailable;
 use TinyBlocks\Math\Internal\Operations\Adapters\BcMathAdapter;
 use TinyBlocks\Math\Internal\Operations\Extension\Extension;
 
-final class MathOperationsFactory
+final readonly class MathOperationsFactory
 {
-    public function __construct(private readonly Extension $extension)
+    public function __construct(private Extension $extension)
     {
     }
 

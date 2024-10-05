@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TinyBlocks\Math\Internal;
 
 use TinyBlocks\Math\BigNumber;
@@ -14,7 +16,7 @@ abstract class BigNumberAdapter
 {
     private MathOperations $mathOperations;
 
-    public function __construct(protected readonly Number $number, protected readonly Scale $scale)
+    protected function __construct(protected readonly Number $number, protected readonly Scale $scale)
     {
         $extension = new ExtensionAdapter();
         $operationsFactory = new MathOperationsFactory(extension: $extension);
@@ -129,7 +131,7 @@ abstract class BigNumberAdapter
 
     public function toFloat(): float
     {
-        return $this->toString();
+        return (float)$this->toString();
     }
 
     public function toString(): string

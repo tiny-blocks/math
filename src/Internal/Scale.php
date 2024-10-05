@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TinyBlocks\Math\Internal;
 
 use TinyBlocks\Math\BigNumber;
@@ -19,7 +21,7 @@ final class Scale
 
     public function scaleOf(string $value): Scale
     {
-        $number = new Number(value: $value);
+        $number = Number::from(value: $value);
 
         $exponent = $number->getExponent();
         $exponent = is_null($exponent) ? self::MINIMUM : $exponent;
@@ -35,7 +37,7 @@ final class Scale
         $result = explode('.', $number->value);
 
         if (count($result) <= 1) {
-            return new Number(value: $result[0]);
+            return Number::from(value: $result[0]);
         }
 
         $decimal = $result[0];
@@ -44,7 +46,7 @@ final class Scale
         $template = '%s.%s';
         $value = sprintf($template, $decimal, $decimalPlaces);
 
-        return new Number(value: $value);
+        return Number::from(value: $value);
     }
 
     public function add(Scale $other): Scale
