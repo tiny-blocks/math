@@ -6,7 +6,7 @@ namespace TinyBlocks\Math\Internal;
 
 use TinyBlocks\Math\Internal\Exceptions\InvalidNumber;
 
-class Number
+final class Number
 {
     private const ZERO = 0.0;
     private const SIGN = '?<sign>[\-\+]';

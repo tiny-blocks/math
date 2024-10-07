@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace TinyBlocks\Math;
 
 use TinyBlocks\Math\Internal\BigNumberBehavior;
-use TinyBlocks\Math\Internal\Exceptions\NonPositiveNumber;
+use TinyBlocks\Math\Internal\Exceptions\NonPositiveValue;
 use TinyBlocks\Math\Internal\Number;
 use TinyBlocks\Math\Internal\Scale;
 
@@ -17,7 +17,7 @@ class PositiveBigDecimal extends BigNumberBehavior implements BigNumber
         $number = Number::from(value: $value);
 
         if ($number->isNegativeOrZero()) {
-            throw new NonPositiveNumber(number: $number);
+            throw new NonPositiveValue(number: $number);
         }
 
         parent::__construct(number: $number, scale: $scale);
