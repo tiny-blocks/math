@@ -8,7 +8,7 @@ use TinyBlocks\Math\Internal\BigNumberBehavior;
 use TinyBlocks\Math\Internal\Number;
 use TinyBlocks\Math\Internal\Scale;
 
-final class BigDecimal extends BigNumberBehavior implements BigNumber
+class BigDecimal extends BigNumberBehavior implements BigNumber
 {
     public static function fromFloat(float $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): BigNumber
     {
