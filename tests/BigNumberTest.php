@@ -15,8 +15,8 @@ final class BigNumberTest extends TestCase
     public function testAdd(int $scale, mixed $value, mixed $other, array $expected): void
     {
         /** @Given two BigNumber instances to be added */
-        $augend = LargeNumber::from(value: $value);
-        $addend = LargeNumber::from(value: $other);
+        $augend = LargeNumber::fromString(value: $value);
+        $addend = LargeNumber::fromString(value: $other);
 
         /** @When adding the two BigNumber instances */
         $actual = $augend->add(addend: $addend);
@@ -31,8 +31,8 @@ final class BigNumberTest extends TestCase
     public function testSubtract(int $scale, mixed $value, mixed $other, array $expected): void
     {
         /** @Given two BigNumber instances to be subtracted */
-        $minuend = LargeNumber::from(value: $value);
-        $subtrahend = LargeNumber::from(value: $other);
+        $minuend = LargeNumber::fromString(value: $value);
+        $subtrahend = LargeNumber::fromString(value: $other);
 
         /** @When subtracting the second BigNumber from the first */
         $actual = $minuend->subtract(subtrahend: $subtrahend);
@@ -47,8 +47,8 @@ final class BigNumberTest extends TestCase
     public function testMultiply(int $scale, mixed $value, mixed $other, array $expected): void
     {
         /** @Given two BigNumber instances to be multiplied */
-        $multiplicand = LargeNumber::from(value: $value);
-        $multiplier = LargeNumber::from(value: $other);
+        $multiplicand = LargeNumber::fromString(value: $value);
+        $multiplier = LargeNumber::fromString(value: $other);
 
         /** @When multiplying the two BigNumber instances */
         $actual = $multiplicand->multiply(multiplier: $multiplier);
@@ -63,8 +63,8 @@ final class BigNumberTest extends TestCase
     public function testDivide(int $scale, mixed $value, mixed $other, array $expected): void
     {
         /** @Given a BigNumber instance to be divided by another BigNumber */
-        $dividend = LargeNumber::from(value: $value);
-        $divisor = LargeNumber::from(value: $other);
+        $dividend = LargeNumber::fromString(value: $value);
+        $divisor = LargeNumber::fromString(value: $other);
 
         /** @When dividing the first BigNumber by the second */
         $actual = $dividend->divide(divisor: $divisor);
@@ -73,6 +73,31 @@ final class BigNumberTest extends TestCase
         self::assertSame($scale, $actual->getScale());
         self::assertSame($expected['string'], $actual->toString());
         self::assertSame(floatval($expected['float']), $actual->toFloat());
+    }
+
+    public function testNegate(): void
+    {
+        /** @Given a BigNumber instance */
+        $value = LargeNumber::fromFloat(value: 123.45);
+
+        /** @When calling the negate method */
+        $actual = $value->negate();
+
+        /** @Then the result should be the negative of the original value */
+        self::assertInstanceOf(LargeNumber::class, $actual);
+        self::assertSame('-123.45', $actual->toString());
+        self::assertSame(-123.45, $actual->toFloat());
+
+        /** @Given a BigNumber instance with a negative value */
+        $negativeValue = LargeNumber::fromFloat(value: -543.21);
+
+        /** @When calling the negate method */
+        $actualNegative = $negativeValue->negate();
+
+        /** @Then the result should be the positive of the original negative value */
+        self::assertInstanceOf(LargeNumber::class, $actualNegative);
+        self::assertSame('543.21', $actualNegative->toString());
+        self::assertSame(543.21, $actualNegative->toFloat());
     }
 
     #[DataProvider('providerForTestDivisionByZero')]
@@ -86,8 +111,8 @@ final class BigNumberTest extends TestCase
         $this->expectExceptionMessage(sprintf($template, $value, $other));
 
         /** @When attempting to divide the BigNumber by zero */
-        $dividend = LargeNumber::from(value: $value);
-        $divisor = LargeNumber::from(value: $other);
+        $dividend = LargeNumber::fromFloat(value: $value);
+        $divisor = LargeNumber::fromFloat(value: $other);
 
         $dividend->divide(divisor: $divisor);
     }
@@ -96,7 +121,7 @@ final class BigNumberTest extends TestCase
     public function testWithRounding(RoundingMode $mode, int $scale, mixed $value, array $expected): void
     {
         /** @Given a BigNumber instance with specified rounding mode */
-        $number = LargeNumber::from(value: $value, scale: $scale);
+        $number = LargeNumber::fromFloat(value: $value, scale: $scale);
 
         /** @When rounding the BigNumber */
         $actual = $number->withRounding(mode: $mode);
@@ -111,7 +136,7 @@ final class BigNumberTest extends TestCase
     public function testWithScale(mixed $value, int $scale, int $withScale, array $expected): void
     {
         /** @Given a BigNumber instance to be scaled */
-        $number = LargeNumber::from(value: $value, scale: $scale);
+        $number = LargeNumber::fromFloat(value: $value, scale: $scale);
 
         /** @When applying a new scale to the BigNumber */
         $actual = $number->withScale(scale: $withScale);
@@ -127,7 +152,7 @@ final class BigNumberTest extends TestCase
     public function testIsZero(mixed $value, bool $expected): void
     {
         /** @Given a BigNumber instance */
-        $number = LargeNumber::from(value: $value);
+        $number = LargeNumber::fromFloat(value: $value);
 
         /** @When checking if the BigNumber is zero */
         $actual = $number->isZero();
@@ -140,7 +165,7 @@ final class BigNumberTest extends TestCase
     public function testIsNegative(mixed $value, bool $expected): void
     {
         /** @Given a BigNumber instance */
-        $number = LargeNumber::from(value: $value);
+        $number = LargeNumber::fromFloat(value: $value);
 
         /** @When checking if the BigNumber is negative */
         $actual = $number->isNegative();
@@ -153,7 +178,7 @@ final class BigNumberTest extends TestCase
     public function testIsPositive(mixed $value, bool $expected): void
     {
         /** @Given a BigNumber instance */
-        $number = LargeNumber::from(value: $value);
+        $number = LargeNumber::fromFloat(value: $value);
 
         /** @When checking if the BigNumber is positive */
         $actual = $number->isPositive();
@@ -166,7 +191,7 @@ final class BigNumberTest extends TestCase
     public function testIsNegativeOrZero(mixed $value, bool $expected): void
     {
         /** @Given a BigNumber instance */
-        $number = LargeNumber::from(value: $value);
+        $number = LargeNumber::fromFloat(value: $value);
 
         /** @When checking if the BigNumber is negative or zero */
         $actual = $number->isNegativeOrZero();
@@ -179,7 +204,7 @@ final class BigNumberTest extends TestCase
     public function testIsPositiveOrZero(mixed $value, bool $expected): void
     {
         /** @Given a BigNumber instance */
-        $number = LargeNumber::from(value: $value);
+        $number = LargeNumber::fromFloat(value: $value);
 
         /** @When checking if the BigNumber is positive or zero */
         $actual = $number->isPositiveOrZero();
@@ -237,14 +262,14 @@ final class BigNumberTest extends TestCase
         return [
             'Adding integers'                   => [
                 'scale'    => 0,
-                'value'    => 1,
-                'other'    => 1,
+                'value'    => '1',
+                'other'    => '1',
                 'expected' => ['float' => 2, 'string' => '2']
             ],
             'Adding with scale'                 => [
                 'scale'    => 3,
-                'value'    => 1002.771,
-                'other'    => 123,
+                'value'    => '1002.771',
+                'other'    => '123',
                 'expected' => ['float' => 1125.771, 'string' => '1125.771']
             ],
             'Adding positives and negatives'    => [
@@ -267,26 +292,26 @@ final class BigNumberTest extends TestCase
         return [
             'Simple subtraction'     => [
                 'scale'    => 2,
-                'value'    => 10.22,
-                'other'    => 5.11,
+                'value'    => '10.22',
+                'other'    => '5.11',
                 'expected' => ['float' => 5.11, 'string' => '5.11']
             ],
             'Subtracting negatives'  => [
                 'scale'    => 3,
-                'value'    => -10.099,
-                'other'    => -10.095,
+                'value'    => '-10.099',
+                'other'    => '-10.095',
                 'expected' => ['float' => -0.004, 'string' => '-0.004']
             ],
             'Resulting in negative'  => [
                 'scale'    => 0,
-                'value'    => 11,
-                'other'    => 12,
+                'value'    => '11',
+                'other'    => '12',
                 'expected' => ['float' => -1, 'string' => '-1']
             ],
             'Subtraction with scale' => [
                 'scale'    => 4,
-                'value'    => 12.9999,
-                'other'    => 6.3333,
+                'value'    => '12.9999',
+                'other'    => '6.3333',
                 'expected' => ['float' => 6.6666, 'string' => '6.6666']
             ]
         ];
@@ -297,8 +322,8 @@ final class BigNumberTest extends TestCase
         return [
             'Basic multiplication'        => [
                 'scale'    => 0,
-                'value'    => 2,
-                'other'    => 2,
+                'value'    => '2',
+                'other'    => '2',
                 'expected' => ['float' => 4, 'string' => '4']
             ],
             'Multiplying negatives'       => [
@@ -315,8 +340,8 @@ final class BigNumberTest extends TestCase
             ],
             'Multiplication with decimal' => [
                 'scale'    => 1,
-                'value'    => 123.0,
-                'other'    => 0.1,
+                'value'    => '123',
+                'other'    => '0.1',
                 'expected' => ['float' => 12.3, 'string' => '12.3']
             ]
         ];
@@ -333,20 +358,20 @@ final class BigNumberTest extends TestCase
             ],
             'Division with small scale'      => [
                 'scale'    => 5,
-                'value'    => 1.234,
+                'value'    => '1.234',
                 'other'    => '100.00',
                 'expected' => ['float' => 0.01234, 'string' => '0.01234']
             ],
             'Division resulting in zero'     => [
                 'scale'    => 0,
                 'value'    => '0.00',
-                'other'    => 8,
+                'other'    => '8',
                 'expected' => ['float' => 0, 'string' => '0']
             ],
             'Division resulting in negative' => [
                 'scale'    => 0,
-                'value'    => -7,
-                'other'    => 0.2,
+                'value'    => '-7',
+                'other'    => '0.2',
                 'expected' => ['float' => -35, 'string' => '-35']
             ]
         ];
@@ -357,7 +382,7 @@ final class BigNumberTest extends TestCase
         return [
             'Division of zero by zero'         => ['value' => 0, 'other' => 0],
             'Division of positive by zero'     => ['value' => 20, 'other' => 0],
-            'Division of decimal zero by zero' => ['value' => '0.00', 'other' => '0.00']
+            'Division of decimal zero by zero' => ['value' => 0.00, 'other' => 0.00]
         ];
     }
 
@@ -401,13 +426,13 @@ final class BigNumberTest extends TestCase
                 'expected'  => ['float' => 0, 'string' => '0']
             ],
             'Scaling with decimal'             => [
-                'value'     => '0.0',
+                'value'     => 0.0,
                 'scale'     => 1,
                 'withScale' => 1,
-                'expected'  => ['float' => 0.0, 'string' => '0.0']
+                'expected'  => ['float' => 0.0, 'string' => '0']
             ],
             'Scaling large negative number'    => [
-                'value'     => '-553.99999',
+                'value'     => -553.99999,
                 'scale'     => 5,
                 'withScale' => 1,
                 'expected'  => ['float' => -553.9, 'string' => '-553.9']
@@ -426,7 +451,7 @@ final class BigNumberTest extends TestCase
         return [
             'Exact zero float'   => ['value' => 0.0, 'expected' => true],
             'NonZero negative'   => ['value' => -1, 'expected' => false],
-            'Zero with decimals' => ['value' => '0.0000000000', 'expected' => true]
+            'Zero with decimals' => ['value' => 0.0000000000, 'expected' => true]
         ];
     }
 
@@ -470,18 +495,18 @@ final class BigNumberTest extends TestCase
     {
         return [
             'Value equal to other'                    => [
-                'value'    => LargeNumber::from(value: 1),
-                'other'    => LargeNumber::from(value: 1),
+                'value'    => LargeNumber::fromFloat(value: 1),
+                'other'    => LargeNumber::fromFloat(value: 1),
                 'expected' => false
             ],
             'Value less than other with decimals'     => [
-                'value'    => LargeNumber::from(value: 45.333, scale: 3),
-                'other'    => LargeNumber::from(value: 45.334, scale: 3),
+                'value'    => LargeNumber::fromFloat(value: 45.333, scale: 3),
+                'other'    => LargeNumber::fromFloat(value: 45.334, scale: 3),
                 'expected' => true
             ],
             'Negative value less than other negative' => [
-                'value'    => LargeNumber::from(value: '-51'),
-                'other'    => LargeNumber::from(value: '-11'),
+                'value'    => LargeNumber::fromString(value: '-51'),
+                'other'    => LargeNumber::fromString(value: '-11'),
                 'expected' => true
             ]
         ];
@@ -491,18 +516,18 @@ final class BigNumberTest extends TestCase
     {
         return [
             'Equal values'                => [
-                'value'    => LargeNumber::from(value: 1),
-                'other'    => LargeNumber::from(value: 1),
+                'value'    => LargeNumber::fromFloat(value: 1),
+                'other'    => LargeNumber::fromFloat(value: 1),
                 'expected' => false
             ],
             'Value greater than other'    => [
-                'value'    => LargeNumber::from(value: 12.12),
-                'other'    => LargeNumber::from(value: 12.11),
+                'value'    => LargeNumber::fromFloat(value: 12.12),
+                'other'    => LargeNumber::fromFloat(value: 12.11),
                 'expected' => true
             ],
             'Negative less than positive' => [
-                'value'    => LargeNumber::from(value: '-1.2222'),
-                'other'    => LargeNumber::from(value: '1'),
+                'value'    => LargeNumber::fromString(value: '-1.2222'),
+                'other'    => LargeNumber::fromString(value: '1'),
                 'expected' => false
             ]
         ];
@@ -512,18 +537,18 @@ final class BigNumberTest extends TestCase
     {
         return [
             'Values are equal'               => [
-                'value'    => LargeNumber::from(value: '88.664'),
-                'other'    => LargeNumber::from(value: '88.664'),
+                'value'    => LargeNumber::fromString(value: '88.664'),
+                'other'    => LargeNumber::fromString(value: '88.664'),
                 'expected' => true
             ],
             'Equal integer values'           => [
-                'value'    => LargeNumber::from(value: 1),
-                'other'    => LargeNumber::from(value: 1),
+                'value'    => LargeNumber::fromFloat(value: 1),
+                'other'    => LargeNumber::fromFloat(value: 1),
                 'expected' => true
             ],
             'Positive greater than negative' => [
-                'value'    => LargeNumber::from(value: '12'),
-                'other'    => LargeNumber::from(value: '-90.95'),
+                'value'    => LargeNumber::fromString(value: '12'),
+                'other'    => LargeNumber::fromString(value: '-90.95'),
                 'expected' => false
             ]
         ];
@@ -533,18 +558,18 @@ final class BigNumberTest extends TestCase
     {
         return [
             'Greater than other'      => [
-                'value'    => LargeNumber::from(value: '45'),
-                'other'    => LargeNumber::from(value: '45.01'),
+                'value'    => LargeNumber::fromString(value: '45'),
+                'other'    => LargeNumber::fromString(value: '45.01'),
                 'expected' => false
             ],
             'Equal integer values'    => [
-                'value'    => LargeNumber::from(value: 1),
-                'other'    => LargeNumber::from(value: 1),
+                'value'    => LargeNumber::fromFloat(value: 1),
+                'other'    => LargeNumber::fromFloat(value: 1),
                 'expected' => true
             ],
             'Very large values equal' => [
-                'value'    => LargeNumber::from(value: 99.999999999999999999),
-                'other'    => LargeNumber::from(value: 99.99999999999999999),
+                'value'    => LargeNumber::fromFloat(value: 99.999999999999999999),
+                'other'    => LargeNumber::fromFloat(value: 99.99999999999999999),
                 'expected' => true
             ]
         ];

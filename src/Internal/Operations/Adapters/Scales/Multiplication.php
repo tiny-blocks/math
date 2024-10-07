@@ -14,8 +14,8 @@ final readonly class Multiplication implements Scales
 
     public function __construct(private BigNumber $multiplicand, private BigNumber $multiplier)
     {
-        $this->multiplicandScale = new Scale(value: $this->multiplicand->getScale());
-        $this->multiplierScale = new Scale(value: $this->multiplier->getScale());
+        $this->multiplicandScale = Scale::from(value: $this->multiplicand->getScale());
+        $this->multiplierScale = Scale::from(value: $this->multiplier->getScale());
     }
 
     public function applyScale(): Scale

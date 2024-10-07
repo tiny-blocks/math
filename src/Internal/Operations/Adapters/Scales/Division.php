@@ -14,8 +14,8 @@ final readonly class Division implements Scales
 
     public function __construct(private BigNumber $dividend, private BigNumber $divisor)
     {
-        $this->dividendScale = new Scale(value: $this->dividend->getScale());
-        $this->divisorScale = new Scale(value: $this->divisor->getScale());
+        $this->dividendScale = Scale::from(value: $this->dividend->getScale());
+        $this->divisorScale = Scale::from(value: $this->divisor->getScale());
     }
 
     public function applyScale(): Scale

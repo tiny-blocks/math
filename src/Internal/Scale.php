@@ -11,12 +11,18 @@ final class Scale
 {
     private const MINIMUM = 0;
     private const MAXIMUM = 2147483647;
+    private const ZERO_DECIMAL_PLACE = 0;
 
-    public function __construct(public readonly ?int $value)
+    private function __construct(public readonly ?int $value)
     {
         if (!$this->hasAutomaticScale() && ($this->value < self::MINIMUM || $this->value > self::MAXIMUM)) {
             throw new InvalidScale(value: $this->value, minimum: self::MINIMUM, maximum: self::MAXIMUM);
         }
+    }
+
+    public static function from(?int $value): Scale
+    {
+        return new Scale(value: $value);
     }
 
     public function scaleOf(string $value): Scale
@@ -41,7 +47,7 @@ final class Scale
         }
 
         $decimal = $result[0];
-        $decimalPlaces = substr($result[1], 0, $scale);
+        $decimalPlaces = substr($result[1], self::ZERO_DECIMAL_PLACE, $scale);
 
         $template = '%s.%s';
         $value = sprintf($template, $decimal, $decimalPlaces);
