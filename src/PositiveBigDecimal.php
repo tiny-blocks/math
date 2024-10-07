@@ -11,8 +11,11 @@ use TinyBlocks\Math\Internal\Scale;
 
 class PositiveBigDecimal extends BigNumberBehavior implements BigNumber
 {
-    private function __construct(Number $number, Scale $scale)
+    protected function __construct(string|float $value, ?int $scale = null)
     {
+        $scale = Scale::from(value: $scale);
+        $number = Number::from(value: $value);
+
         if ($number->isNegativeOrZero()) {
             throw new NonPositiveNumber(number: $number);
         }
@@ -22,17 +25,11 @@ class PositiveBigDecimal extends BigNumberBehavior implements BigNumber
 
     public static function fromFloat(float $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): PositiveBigDecimal
     {
-        $scale = Scale::from(value: $scale);
-        $number = Number::from(value: $value);
-
-        return new PositiveBigDecimal(number: $number, scale: $scale);
+        return new PositiveBigDecimal(value: $value, scale: $scale);
     }
 
     public static function fromString(string $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): PositiveBigDecimal
     {
-        $scale = Scale::from(value: $scale);
-        $number = Number::from(value: $value);
-
-        return new PositiveBigDecimal(number: $number, scale: $scale);
+        return new PositiveBigDecimal(value: $value, scale: $scale);
     }
 }

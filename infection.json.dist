@@ -17,7 +17,8 @@
         "BCMath": false,
         "CastInt": false,
         "Ternary": false,
-        "MethodCallRemoval": false
+        "MethodCallRemoval": false,
+        "ProtectedVisibility": false
     },
     "phpUnit": {
         "configDir": "",
