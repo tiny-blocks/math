@@ -10,19 +10,21 @@ use TinyBlocks\Math\Internal\Scale;
 
 class BigDecimal extends BigNumberBehavior implements BigNumber
 {
-    public static function fromFloat(float $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): BigNumber
+    protected function __construct(string|float $value, ?int $scale = null)
     {
         $scale = Scale::from(value: $scale);
         $number = Number::from(value: $value);
 
-        return new BigDecimal(number: $number, scale: $scale);
+        parent::__construct(number: $number, scale: $scale);
     }
 
-    public static function fromString(string $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): BigNumber
+    public static function fromFloat(float $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): BigDecimal
     {
-        $scale = Scale::from(value: $scale);
-        $number = Number::from(value: $value);
+        return new BigDecimal(value: $value, scale: $scale);
+    }
 
-        return new BigDecimal(number: $number, scale: $scale);
+    public static function fromString(string $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): BigDecimal
+    {
+        return new BigDecimal(value: $value, scale: $scale);
     }
 }
