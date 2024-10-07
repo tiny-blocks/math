@@ -9,7 +9,7 @@ use TinyBlocks\Math\Internal\Exceptions\NonPositiveNumber;
 use TinyBlocks\Math\Internal\Number;
 use TinyBlocks\Math\Internal\Scale;
 
-final class PositiveBigDecimal extends BigNumberBehavior implements BigNumber
+class PositiveBigDecimal extends BigNumberBehavior implements BigNumber
 {
     private function __construct(Number $number, Scale $scale)
     {
