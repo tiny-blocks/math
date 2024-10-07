@@ -14,8 +14,8 @@ final readonly class Subtraction
 
     public function __construct(private BigNumber $minuend, private BigNumber $subtrahend)
     {
-        $this->minuendScale = new Scale(value: $this->minuend->getScale());
-        $this->subtrahendScale = new Scale(value: $this->subtrahend->getScale());
+        $this->minuendScale = Scale::from(value: $this->minuend->getScale());
+        $this->subtrahendScale = Scale::from(value: $this->subtrahend->getScale());
     }
 
     public function applyScale(): Scale

@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace TinyBlocks\Math;
 
-use TinyBlocks\Math\Internal\BigNumberAdapter;
+use TinyBlocks\Math\Internal\BigNumberBehavior;
 use TinyBlocks\Math\Internal\Exceptions\NonPositiveNumber;
 use TinyBlocks\Math\Internal\Number;
 use TinyBlocks\Math\Internal\Scale;
-use TinyBlocks\Vo\ValueObject;
-use TinyBlocks\Vo\ValueObjectAdapter;
 
-final class PositiveBigDecimal extends BigNumberAdapter implements BigNumber, ValueObject
+final class PositiveBigDecimal extends BigNumberBehavior implements BigNumber
 {
-    use ValueObjectAdapter;
-
     private function __construct(Number $number, Scale $scale)
     {
         if ($number->isNegativeOrZero()) {
@@ -24,9 +20,17 @@ final class PositiveBigDecimal extends BigNumberAdapter implements BigNumber, Va
         parent::__construct(number: $number, scale: $scale);
     }
 
-    public static function from(float|string $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): PositiveBigDecimal
+    public static function fromFloat(float $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): PositiveBigDecimal
     {
-        $scale = new Scale(value: $scale);
+        $scale = Scale::from(value: $scale);
+        $number = Number::from(value: $value);
+
+        return new PositiveBigDecimal(number: $number, scale: $scale);
+    }
+
+    public static function fromString(string $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): PositiveBigDecimal
+    {
+        $scale = Scale::from(value: $scale);
         $number = Number::from(value: $value);
 
         return new PositiveBigDecimal(number: $number, scale: $scale);

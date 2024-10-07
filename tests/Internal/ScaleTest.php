@@ -14,7 +14,7 @@ final class ScaleTest extends TestCase
     public function testValidScale(int $value): void
     {
         /** @Given a valid scale value */
-        $scale = new Scale(value: $value);
+        $scale = Scale::from(value: $value);
 
         /** @When retrieving the scale value */
         $actual = $scale->value;
@@ -34,7 +34,7 @@ final class ScaleTest extends TestCase
         $this->expectExceptionMessage(sprintf($template, $value, 0, 2147483647));
 
         /** @When attempting to create a Scale with the invalid value */
-        new Scale(value: $value);
+        Scale::from(value: $value);
     }
 
     public static function validScaleDataProvider(): array

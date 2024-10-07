@@ -68,15 +68,15 @@ final class RounderTest extends TestCase
     {
         return [
             'Negative rounding up'             => [
-                'number'   => BigDecimal::from(value: -65.2324, scale: 0),
+                'number'   => BigDecimal::fromFloat(value: -65.2324, scale: 0),
                 'expected' => -65
             ],
             'Round up with decimals'           => [
-                'number'   => BigDecimal::from(value: 0.70878454657657657, scale: 5),
+                'number'   => BigDecimal::fromFloat(value: 0.70878454657657657, scale: 5),
                 'expected' => 0.70878
             ],
             'Round up to nearest whole number' => [
-                'number'   => BigDecimal::from(value: 10.5, scale: 0),
+                'number'   => BigDecimal::fromFloat(value: 10.5, scale: 0),
                 'expected' => 11
             ]
         ];
@@ -86,15 +86,15 @@ final class RounderTest extends TestCase
     {
         return [
             'Negative rounding down'             => [
-                'number'   => BigDecimal::from(value: -65.2324, scale: 0),
+                'number'   => BigDecimal::fromFloat(value: -65.2324, scale: 0),
                 'expected' => -65
             ],
             'Round down with decimals'           => [
-                'number'   => BigDecimal::from(value: 0.70878454657657657, scale: 5),
+                'number'   => BigDecimal::fromFloat(value: 0.70878454657657657, scale: 5),
                 'expected' => 0.70878
             ],
             'Round down to nearest whole number' => [
-                'number'   => BigDecimal::from(value: 10.5, scale: 0),
+                'number'   => BigDecimal::fromFloat(value: 10.5, scale: 0),
                 'expected' => 10
             ]
         ];
@@ -104,15 +104,15 @@ final class RounderTest extends TestCase
     {
         return [
             'Round to nearest even'       => [
-                'number'   => BigDecimal::from(value: 10.5, scale: 0),
+                'number'   => BigDecimal::fromFloat(value: 10.5, scale: 0),
                 'expected' => 10
             ],
             'Negative rounding to even'   => [
-                'number'   => BigDecimal::from(value: -65.2324, scale: 0),
+                'number'   => BigDecimal::fromFloat(value: -65.2324, scale: 0),
                 'expected' => -65
             ],
             'Round to even with decimals' => [
-                'number'   => BigDecimal::from(value: 0.70878454657657657, scale: 5),
+                'number'   => BigDecimal::fromFloat(value: 0.70878454657657657, scale: 5),
                 'expected' => 0.70878
             ]
         ];
@@ -122,15 +122,15 @@ final class RounderTest extends TestCase
     {
         return [
             'Round to nearest odd'       => [
-                'number'   => BigDecimal::from(value: 10.5, scale: 0),
+                'number'   => BigDecimal::fromFloat(value: 10.5, scale: 0),
                 'expected' => 11
             ],
             'Negative rounding to odd'   => [
-                'number'   => BigDecimal::from(value: -65.2324, scale: 0),
+                'number'   => BigDecimal::fromFloat(value: -65.2324, scale: 0),
                 'expected' => -65
             ],
             'Round to odd with decimals' => [
-                'number'   => BigDecimal::from(value: 0.70878454657657657, scale: 5),
+                'number'   => BigDecimal::fromFloat(value: 0.70878454657657657, scale: 5),
                 'expected' => 0.70878
             ]
         ];

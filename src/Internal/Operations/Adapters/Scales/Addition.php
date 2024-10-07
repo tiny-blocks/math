@@ -14,8 +14,8 @@ final readonly class Addition implements Scales
 
     public function __construct(private BigNumber $augend, private BigNumber $addend)
     {
-        $this->augendScale = new Scale(value: $this->augend->getScale());
-        $this->addendScale = new Scale(value: $this->addend->getScale());
+        $this->augendScale = Scale::from(value: $this->augend->getScale());
+        $this->addendScale = Scale::from(value: $this->addend->getScale());
     }
 
     public function applyScale(): Scale
