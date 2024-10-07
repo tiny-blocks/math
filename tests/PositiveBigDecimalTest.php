@@ -6,7 +6,8 @@ namespace TinyBlocks\Math;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use TinyBlocks\Math\Internal\Exceptions\NonPositiveNumber;
+use TinyBlocks\Math\Internal\Exceptions\NonPositiveValue;
+use TinyBlocks\Math\Models\CustomPositiveBigDecimal;
 
 final class PositiveBigDecimalTest extends TestCase
 {
@@ -36,27 +37,27 @@ final class PositiveBigDecimalTest extends TestCase
         self::assertInstanceOf(PositiveBigDecimal::class, $actual);
     }
 
-    #[DataProvider('dataProviderForTestNonPositiveNumber')]
-    public function testNonPositiveNumber(mixed $value): void
+    #[DataProvider('dataProviderForTestNonPositiveValue')]
+    public function testNonPositiveValue(mixed $value): void
     {
         /** @Given a non-positive value */
-        $template = 'The <%.2f> value must be positive.';
+        $template = 'Value <%s> is not valid. Must be a positive number greater than zero.';
 
-        /** @Then a NonPositiveNumber exception should be thrown with the correct message */
-        $this->expectException(NonPositiveNumber::class);
+        /** @Then a NonPositiveValue exception should be thrown with the correct message */
+        $this->expectException(NonPositiveValue::class);
         $this->expectExceptionMessage(sprintf($template, $value));
 
         /** @When attempting to create a PositiveBigDecimal with a non-positive value */
         PositiveBigDecimal::fromFloat(value: $value);
     }
 
-    public function testNonPositiveNumberWithNegate(): void
+    public function testNonPositiveValueWithNegate(): void
     {
         /** @Given a PositiveBigDecimal value */
-        $template = 'The <%.2f> value must be positive.';
+        $template = 'Value <%s> is not valid. Must be a positive number greater than zero.';
 
-        /** @Then a NonPositiveNumber exception should be thrown when the value is negated */
-        $this->expectException(NonPositiveNumber::class);
+        /** @Then a NonPositiveValue exception should be thrown when the value is negated */
+        $this->expectException(NonPositiveValue::class);
         $this->expectExceptionMessage(sprintf($template, -1.00));
 
         /** @When negating a positive number, it should trigger an exception */
@@ -64,7 +65,20 @@ final class PositiveBigDecimalTest extends TestCase
         $positive->negate();
     }
 
-    public static function dataProviderForTestNonPositiveNumber(): array
+    public function testNonPositiveValueWithCustomClass(): void
+    {
+        /** @Given a non-positive value */
+        $template = 'Value <%s> is not valid. Must be a positive number greater than zero.';
+
+        /** @Then a NonPositiveValue exception should be thrown with the correct message */
+        $this->expectException(NonPositiveValue::class);
+        $this->expectExceptionMessage(sprintf($template, -1.00));
+
+        /** @When attempting to create a CustomPositiveBigDecimal with a non-positive value */
+        CustomPositiveBigDecimal::fromFloat(value: -1.00);
+    }
+
+    public static function dataProviderForTestNonPositiveValue(): array
     {
         return [
             'Zero value'       => ['value' => 0],
