@@ -67,28 +67,28 @@ final class ScalesTest extends TestCase
     {
         return [
             'Adding integers'                       => [
-                'addend'   => BigDecimal::from(value: 1),
-                'augend'   => BigDecimal::from(value: 1),
+                'addend'   => BigDecimal::fromFloat(value: 1),
+                'augend'   => BigDecimal::fromFloat(value: 1),
                 'expected' => 0
             ],
             'Adding large decimals'                 => [
-                'addend'   => BigDecimal::from(value: 1.001),
-                'augend'   => BigDecimal::from(value: 1.0001),
+                'addend'   => BigDecimal::fromFloat(value: 1.001),
+                'augend'   => BigDecimal::fromFloat(value: 1.0001),
                 'expected' => 4
             ],
             'Adding integer and decimal'            => [
-                'addend'   => BigDecimal::from(value: 1),
-                'augend'   => BigDecimal::from(value: 1.1),
+                'addend'   => BigDecimal::fromFloat(value: 1),
+                'augend'   => BigDecimal::fromFloat(value: 1.1),
                 'expected' => 1
             ],
             'Adding decimals with specific scale'   => [
-                'addend'   => BigDecimal::from(value: 1.001, scale: 3),
-                'augend'   => BigDecimal::from(value: 1.0001),
+                'addend'   => BigDecimal::fromFloat(value: 1.001, scale: 3),
+                'augend'   => BigDecimal::fromFloat(value: 1.0001),
                 'expected' => 3
             ],
             'Adding decimals with different scales' => [
-                'addend'   => BigDecimal::from(value: 1.01),
-                'augend'   => BigDecimal::from(value: 1.1),
+                'addend'   => BigDecimal::fromFloat(value: 1.01),
+                'augend'   => BigDecimal::fromFloat(value: 1.1),
                 'expected' => 2
             ]
         ];
@@ -98,28 +98,28 @@ final class ScalesTest extends TestCase
     {
         return [
             'Subtracting integers'                       => [
-                'minuend'    => BigDecimal::from(value: 1),
-                'subtrahend' => BigDecimal::from(value: 1),
+                'minuend'    => BigDecimal::fromFloat(value: 1),
+                'subtrahend' => BigDecimal::fromFloat(value: 1),
                 'expected'   => 0
             ],
             'Subtracting large decimals'                 => [
-                'minuend'    => BigDecimal::from(value: 1.001),
-                'subtrahend' => BigDecimal::from(value: 1.0001),
+                'minuend'    => BigDecimal::fromFloat(value: 1.001),
+                'subtrahend' => BigDecimal::fromFloat(value: 1.0001),
                 'expected'   => 4
             ],
             'Subtracting integer and decimal'            => [
-                'minuend'    => BigDecimal::from(value: 1),
-                'subtrahend' => BigDecimal::from(value: 1.1),
+                'minuend'    => BigDecimal::fromFloat(value: 1),
+                'subtrahend' => BigDecimal::fromFloat(value: 1.1),
                 'expected'   => 1
             ],
             'Subtracting decimals with specific scale'   => [
-                'minuend'    => BigDecimal::from(value: 1.001, scale: 3),
-                'subtrahend' => BigDecimal::from(value: 1.0001),
+                'minuend'    => BigDecimal::fromFloat(value: 1.001, scale: 3),
+                'subtrahend' => BigDecimal::fromFloat(value: 1.0001),
                 'expected'   => 3
             ],
             'Subtracting decimals with different scales' => [
-                'minuend'    => BigDecimal::from(value: 1.01),
-                'subtrahend' => BigDecimal::from(value: 1.1),
+                'minuend'    => BigDecimal::fromFloat(value: 1.01),
+                'subtrahend' => BigDecimal::fromFloat(value: 1.1),
                 'expected'   => 2
             ]
         ];
@@ -129,28 +129,28 @@ final class ScalesTest extends TestCase
     {
         return [
             'Multiplying integers'                       => [
-                'multiplier'   => BigDecimal::from(value: 1),
-                'multiplicand' => BigDecimal::from(value: 1),
+                'multiplier'   => BigDecimal::fromFloat(value: 1),
+                'multiplicand' => BigDecimal::fromFloat(value: 1),
                 'expected'     => 0
             ],
             'Multiplying large decimals'                 => [
-                'multiplier'   => BigDecimal::from(value: 1.001),
-                'multiplicand' => BigDecimal::from(value: 1.0001),
+                'multiplier'   => BigDecimal::fromFloat(value: 1.001),
+                'multiplicand' => BigDecimal::fromFloat(value: 1.0001),
                 'expected'     => 4
             ],
             'Multiplying integer and decimal'            => [
-                'multiplier'   => BigDecimal::from(value: 1),
-                'multiplicand' => BigDecimal::from(value: 1.1),
+                'multiplier'   => BigDecimal::fromFloat(value: 1),
+                'multiplicand' => BigDecimal::fromFloat(value: 1.1),
                 'expected'     => 1
             ],
             'Multiplying decimals with specific scale'   => [
-                'multiplier'   => BigDecimal::from(value: 1.001, scale: 3),
-                'multiplicand' => BigDecimal::from(value: 1.0001),
+                'multiplier'   => BigDecimal::fromFloat(value: 1.001, scale: 3),
+                'multiplicand' => BigDecimal::fromFloat(value: 1.0001),
                 'expected'     => 3
             ],
             'Multiplying decimals with different scales' => [
-                'multiplier'   => BigDecimal::from(value: 1.01),
-                'multiplicand' => BigDecimal::from(value: 1.1),
+                'multiplier'   => BigDecimal::fromFloat(value: 1.01),
+                'multiplicand' => BigDecimal::fromFloat(value: 1.1),
                 'expected'     => 2
             ],
         ];
@@ -160,28 +160,28 @@ final class ScalesTest extends TestCase
     {
         return [
             'Dividing integers'                       => [
-                'dividend' => BigDecimal::from(value: 1),
-                'divisor'  => BigDecimal::from(value: 1),
+                'dividend' => BigDecimal::fromFloat(value: 1),
+                'divisor'  => BigDecimal::fromFloat(value: 1),
                 'expected' => 0
             ],
             'Dividing large decimals'                 => [
-                'dividend' => BigDecimal::from(value: 1.001),
-                'divisor'  => BigDecimal::from(value: 1.0001),
+                'dividend' => BigDecimal::fromFloat(value: 1.001),
+                'divisor'  => BigDecimal::fromFloat(value: 1.0001),
                 'expected' => 12
             ],
             'Dividing integer and decimal'            => [
-                'dividend' => BigDecimal::from(value: 1),
-                'divisor'  => BigDecimal::from(value: 1.1),
+                'dividend' => BigDecimal::fromFloat(value: 1),
+                'divisor'  => BigDecimal::fromFloat(value: 1.1),
                 'expected' => 14
             ],
             'Dividing decimals with specific scale'   => [
-                'dividend' => BigDecimal::from(value: 1.001, scale: 3),
-                'divisor'  => BigDecimal::from(value: 1.0001),
+                'dividend' => BigDecimal::fromFloat(value: 1.001, scale: 3),
+                'divisor'  => BigDecimal::fromFloat(value: 1.0001),
                 'expected' => 3
             ],
             'Dividing decimals with different scales' => [
-                'dividend' => BigDecimal::from(value: 1.01),
-                'divisor'  => BigDecimal::from(value: 1.1),
+                'dividend' => BigDecimal::fromFloat(value: 1.01),
+                'divisor'  => BigDecimal::fromFloat(value: 1.1),
                 'expected' => 14
             ]
         ];

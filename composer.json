@@ -44,7 +44,6 @@
     },
     "require": {
         "php": "^8.2",
-        "tiny-blocks/value-object": "^2",
         "ext-bcmath": "*"
     },
     "require-dev": {

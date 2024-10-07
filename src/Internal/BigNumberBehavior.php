@@ -12,7 +12,7 @@ use TinyBlocks\Math\Internal\Operations\MathOperationsFactory;
 use TinyBlocks\Math\Internal\Operations\Rounding\Rounder;
 use TinyBlocks\Math\RoundingMode;
 
-abstract class BigNumberAdapter
+abstract class BigNumberBehavior implements BigNumber
 {
     private MathOperations $mathOperations;
 
@@ -23,27 +23,29 @@ abstract class BigNumberAdapter
         $this->mathOperations = $operationsFactory->build();
     }
 
-    abstract public static function from(float|string $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): BigNumber;
+    abstract public static function fromFloat(float $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): BigNumber;
+
+    abstract public static function fromString(string $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): BigNumber;
 
     public function add(BigNumber $addend): BigNumber
     {
         $result = $this->mathOperations->add(augend: $this, addend: $addend);
 
-        return $this::from(value: $result->number->value, scale: $result->scale->value);
+        return static::fromString(value: $result->number->value, scale: $result->scale->value);
     }
 
     public function subtract(BigNumber $subtrahend): BigNumber
     {
         $result = $this->mathOperations->subtract(minuend: $this, subtrahend: $subtrahend);
 
-        return $this::from(value: $result->number->value, scale: $result->scale->value);
+        return static::fromString(value: $result->number->value, scale: $result->scale->value);
     }
 
     public function multiply(BigNumber $multiplier): BigNumber
     {
         $result = $this->mathOperations->multiply(multiplicand: $this, multiplier: $multiplier);
 
-        return $this::from(value: $result->number->value, scale: $result->scale->value);
+        return static::fromString(value: $result->number->value, scale: $result->scale->value);
     }
 
     public function divide(BigNumber $divisor): BigNumber
@@ -54,7 +56,7 @@ abstract class BigNumberAdapter
 
         $result = $this->mathOperations->divide(dividend: $this, divisor: $divisor);
 
-        return $this::from(value: $result->number->value, scale: $result->scale->value);
+        return static::fromString(value: $result->number->value, scale: $result->scale->value);
     }
 
     public function withRounding(RoundingMode $mode): BigNumber
@@ -62,19 +64,19 @@ abstract class BigNumberAdapter
         $rounder = new Rounder(mode: $mode, bigNumber: $this);
         $rounded = $rounder->round();
 
-        return $this::from(value: $rounded->value, scale: $this->scale->value);
+        return static::fromString(value: $rounded->value, scale: $this->scale->value);
     }
 
     public function withScale(int $scale): BigNumber
     {
         $number = $this->scale->numberWithScale(number: $this->number, scale: $scale);
 
-        return $this::from(value: $number->value, scale: $scale);
+        return static::fromString(value: $number->value, scale: $scale);
     }
 
     public function negate(): BigNumber
     {
-        $multiplicand = $this->from(value: -1);
+        $multiplicand = static::fromFloat(value: -1);
 
         return $this->multiply(multiplier: $multiplicand);
     }

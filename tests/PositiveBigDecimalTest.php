@@ -10,11 +10,26 @@ use TinyBlocks\Math\Internal\Exceptions\NonPositiveNumber;
 
 final class PositiveBigDecimalTest extends TestCase
 {
-    #[DataProvider('dataProviderForTestFrom')]
-    public function testFrom(mixed $value): void
+    public function testFromFloat(): void
     {
-        /** @Given a positive value to create a PositiveBigDecimal instance */
-        $actual = PositiveBigDecimal::from(value: $value);
+        /** @Given a positive float value */
+        $value = 1.0;
+
+        /** @When creating a PositiveBigDecimal from the float */
+        $actual = PositiveBigDecimal::fromFloat(value: $value);
+
+        /** @Then the created object should be an instance of both BigNumber and PositiveBigDecimal */
+        self::assertInstanceOf(BigNumber::class, $actual);
+        self::assertInstanceOf(PositiveBigDecimal::class, $actual);
+    }
+
+    public function testFromString(): void
+    {
+        /** @Given a positive string value */
+        $value = '0.3333333333333333333333';
+
+        /** @When creating a PositiveBigDecimal from the string */
+        $actual = PositiveBigDecimal::fromString(value: $value);
 
         /** @Then the created object should be an instance of both BigNumber and PositiveBigDecimal */
         self::assertInstanceOf(BigNumber::class, $actual);
@@ -32,7 +47,7 @@ final class PositiveBigDecimalTest extends TestCase
         $this->expectExceptionMessage(sprintf($template, $value));
 
         /** @When attempting to create a PositiveBigDecimal with a non-positive value */
-        PositiveBigDecimal::from(value: $value);
+        PositiveBigDecimal::fromFloat(value: $value);
     }
 
     public function testNonPositiveNumberWithNegate(): void
@@ -45,16 +60,8 @@ final class PositiveBigDecimalTest extends TestCase
         $this->expectExceptionMessage(sprintf($template, -1.00));
 
         /** @When negating a positive number, it should trigger an exception */
-        $positive = PositiveBigDecimal::from(value: 10.155);
+        $positive = PositiveBigDecimal::fromFloat(value: 10.155);
         $positive->negate();
-    }
-
-    public static function dataProviderForTestFrom(): array
-    {
-        return [
-            'Positive integer'        => ['value' => 1],
-            'Positive decimal string' => ['value' => '0.3333333333333333333333']
-        ];
     }
 
     public static function dataProviderForTestNonPositiveNumber(): array

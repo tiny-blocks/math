@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace TinyBlocks\Math;
 
-use TinyBlocks\Math\Internal\BigNumberAdapter;
+use TinyBlocks\Math\Internal\BigNumberBehavior;
 use TinyBlocks\Math\Internal\Number;
 use TinyBlocks\Math\Internal\Scale;
-use TinyBlocks\Vo\ValueObject;
-use TinyBlocks\Vo\ValueObjectAdapter;
 
-final class BigDecimal extends BigNumberAdapter implements BigNumber, ValueObject
+final class BigDecimal extends BigNumberBehavior implements BigNumber
 {
-    use ValueObjectAdapter;
-
-    public static function from(float|string $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): BigDecimal
+    public static function fromFloat(float $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): BigNumber
     {
-        $scale = new Scale(value: $scale);
+        $scale = Scale::from(value: $scale);
+        $number = Number::from(value: $value);
+
+        return new BigDecimal(number: $number, scale: $scale);
+    }
+
+    public static function fromString(string $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): BigNumber
+    {
+        $scale = Scale::from(value: $scale);
         $number = Number::from(value: $value);
 
         return new BigDecimal(number: $number, scale: $scale);
