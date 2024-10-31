@@ -7,13 +7,13 @@ namespace TinyBlocks\Math\Internal;
 use TinyBlocks\Math\BigNumber;
 use TinyBlocks\Math\Internal\Exceptions\InvalidScale;
 
-final class Scale
+final readonly class Scale
 {
     private const MINIMUM = 0;
     private const MAXIMUM = 2147483647;
     private const ZERO_DECIMAL_PLACE = 0;
 
-    private function __construct(public readonly ?int $value)
+    private function __construct(public ?int $value)
     {
         if (!$this->hasAutomaticScale() && ($this->value < self::MINIMUM || $this->value > self::MAXIMUM)) {
             throw new InvalidScale(value: $this->value, minimum: self::MINIMUM, maximum: self::MAXIMUM);

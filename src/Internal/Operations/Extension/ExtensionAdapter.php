@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace TinyBlocks\Math\Internal\Operations\Extension;
 
-final class ExtensionAdapter implements Extension
+final readonly class ExtensionAdapter implements Extension
 {
     public function isAvailable(string $extension): bool
     {
