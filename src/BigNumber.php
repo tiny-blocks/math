@@ -15,6 +15,13 @@ interface BigNumber
     public const AUTOMATIC_SCALE = null;
 
     /**
+     * Converts the current BigNumber to its absolute value.
+     *
+     * @return BigNumber A new BigNumber representing the absolute value.
+     */
+    public function absolute(): BigNumber;
+
+    /**
      * Adds the current BigNumber (augend) with another BigNumber (addend).
      *
      * @param BigNumber $addend The BigNumber to be added to the current BigNumber.

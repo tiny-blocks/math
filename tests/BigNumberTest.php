@@ -11,6 +11,23 @@ use TinyBlocks\Math\Models\LargeNumber;
 
 final class BigNumberTest extends TestCase
 {
+    public function testAbsolute(): void
+    {
+        /** @Given a BigNumber instance */
+        $negativeValue = -10.155;
+        $number = LargeNumber::fromFloat(value: $negativeValue);
+
+        /** @When calling the absolute method */
+        $actual = $number->absolute();
+
+        /** @Then the result should be an instance of BigNumber */
+        self::assertInstanceOf(BigNumber::class, $actual);
+
+        /** @And the value should be the absolute value of the negative number */
+        self::assertSame(abs($negativeValue), $actual->toFloat());
+        self::assertSame(sprintf('%s', abs($negativeValue)), $actual->toString());
+    }
+
     #[DataProvider('providerForTestAdd')]
     public function testAdd(int $scale, mixed $value, mixed $other, array $expected): void
     {
