@@ -66,6 +66,11 @@ final class Number
         return $this->value < self::ZERO;
     }
 
+    public function isPositiveOrZero(): bool
+    {
+        return $this->isZero() || !$this->isNegative();
+    }
+
     public function isNegativeOrZero(): bool
     {
         return $this->isZero() || $this->isNegative();
