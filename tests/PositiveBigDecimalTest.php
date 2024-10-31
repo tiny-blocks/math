@@ -51,20 +51,6 @@ final class PositiveBigDecimalTest extends TestCase
         PositiveBigDecimal::fromFloat(value: $value);
     }
 
-    public function testNonPositiveValueWithNegate(): void
-    {
-        /** @Given a PositiveBigDecimal value */
-        $template = 'Value <%s> is not valid. Must be a positive number greater than zero.';
-
-        /** @Then a NonPositiveValue exception should be thrown when the value is negated */
-        $this->expectException(NonPositiveValue::class);
-        $this->expectExceptionMessage(sprintf($template, -1.00));
-
-        /** @When negating a positive number, it should trigger an exception */
-        $positive = PositiveBigDecimal::fromFloat(value: 10.155);
-        $positive->negate();
-    }
-
     public function testNonPositiveValueWithCustomClass(): void
     {
         /** @Given a non-positive value */

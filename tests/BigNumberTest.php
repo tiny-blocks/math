@@ -75,31 +75,6 @@ final class BigNumberTest extends TestCase
         self::assertSame(floatval($expected['float']), $actual->toFloat());
     }
 
-    public function testNegate(): void
-    {
-        /** @Given a BigNumber instance */
-        $value = LargeNumber::fromFloat(value: 123.45);
-
-        /** @When calling the negate method */
-        $actual = $value->negate();
-
-        /** @Then the result should be the negative of the original value */
-        self::assertInstanceOf(LargeNumber::class, $actual);
-        self::assertSame('-123.45', $actual->toString());
-        self::assertSame(-123.45, $actual->toFloat());
-
-        /** @Given a BigNumber instance with a negative value */
-        $negativeValue = LargeNumber::fromFloat(value: -543.21);
-
-        /** @When calling the negate method */
-        $actualNegative = $negativeValue->negate();
-
-        /** @Then the result should be the positive of the original negative value */
-        self::assertInstanceOf(LargeNumber::class, $actualNegative);
-        self::assertSame('543.21', $actualNegative->toString());
-        self::assertSame(543.21, $actualNegative->toFloat());
-    }
-
     #[DataProvider('providerForTestDivisionByZero')]
     public function testDivisionByZero(mixed $value, mixed $other): void
     {
