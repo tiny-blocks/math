@@ -163,18 +163,6 @@ rounding occurs:
     $result->toString(); # 0.99
     ```
 
-#### Negate
-
-Sometimes it is necessary to convert a value to negative, in these cases you can use the `negate` method.
-
-```php
-$value = BigDecimal::fromFloat(value: 1);
-
-$result = $value->negate();
-
-$result->toString(); # -1
-```
-
 #### Others
 
 Check out other available resources by looking at the [BigNumber](src/BigNumber.php) interface.

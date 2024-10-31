@@ -36,6 +36,21 @@ final class NegativeBigDecimalTest extends TestCase
         self::assertInstanceOf(NegativeBigDecimal::class, $actual);
     }
 
+    public function testNegativeValueReturnsNegativeFloat(): void
+    {
+        /** @Given a negative float value */
+        $value = -10.155;
+
+        /** @When creating a NegativeBigDecimal from the float */
+        $negativeBigDecimal = NegativeBigDecimal::fromFloat(value: $value);
+
+        /** @Then the toFloat method should return the correct negative value */
+        self::assertSame($value, $negativeBigDecimal->toFloat());
+
+        /** @Then the toString method should return the correct string representation */
+        self::assertSame(sprintf('-%s', abs($value)), $negativeBigDecimal->toString());
+    }
+
     #[DataProvider('dataProviderForTestNonNegativeValue')]
     public function testNonNegativeValue(mixed $value): void
     {
@@ -48,20 +63,6 @@ final class NegativeBigDecimalTest extends TestCase
 
         /** @When attempting to create a NegativeBigDecimal with a non-negative value */
         NegativeBigDecimal::fromFloat(value: $value);
-    }
-
-    public function testNonNegativeValueWithNegate(): void
-    {
-        /** @Given a NegativeBigDecimal value */
-        $template = 'Value <%s> is not valid. Must be a negative number less than zero.';
-
-        /** @Then a NonNegativeValue exception should be thrown when the value is negated */
-        $this->expectException(NonNegativeValue::class);
-        $this->expectExceptionMessage(sprintf($template, 10.155));
-
-        /** @When negating a negative number, it should trigger an exception */
-        $negative = NegativeBigDecimal::fromFloat(value: -10.155);
-        $negative->negate();
     }
 
     public static function dataProviderForTestNonNegativeValue(): array

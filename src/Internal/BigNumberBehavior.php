@@ -74,13 +74,6 @@ abstract class BigNumberBehavior implements BigNumber
         return static::fromString(value: $number->value, scale: $scale);
     }
 
-    public function negate(): BigNumber
-    {
-        $multiplicand = static::fromFloat(value: -1);
-
-        return $this->multiply(multiplier: $multiplicand);
-    }
-
     public function getScale(): ?int
     {
         return $this->scale->value;
