@@ -27,6 +27,11 @@ abstract class BigNumberBehavior implements BigNumber
 
     abstract public static function fromString(string $value, ?int $scale = BigNumber::AUTOMATIC_SCALE): BigNumber;
 
+    public function absolute(): BigNumber
+    {
+        return static::fromString(value: (string)abs((float)$this->number->value));
+    }
+
     public function add(BigNumber $addend): BigNumber
     {
         $result = $this->mathOperations->add(augend: $this, addend: $addend);
