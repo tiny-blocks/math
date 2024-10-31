@@ -12,7 +12,7 @@ use TinyBlocks\Math\Internal\Operations\Adapters\Scales\Multiplication;
 use TinyBlocks\Math\Internal\Operations\Adapters\Scales\Subtraction;
 use TinyBlocks\Math\Internal\Operations\MathOperations;
 
-final class BcMathAdapter implements MathOperations
+final readonly class BcMathAdapter implements MathOperations
 {
     public function add(BigNumber $augend, BigNumber $addend): Result
     {
