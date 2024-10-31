@@ -114,13 +114,6 @@ interface BigNumber
     public function multiply(BigNumber $multiplier): BigNumber;
 
     /**
-     * Returns a new BigNumber with the negated value of the current BigNumber.
-     *
-     * @return BigNumber A new BigNumber representing the negated value of the current number.
-     */
-    public function negate(): BigNumber;
-
-    /**
      * Subtracts another BigNumber (subtrahend) from the current BigNumber (minuend).
      *
      * @param BigNumber $subtrahend The BigNumber to be subtracted from the current BigNumber.
