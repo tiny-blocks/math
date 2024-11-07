@@ -9,7 +9,6 @@ use TinyBlocks\Math\Internal\Exceptions\DivisionByZero;
 use TinyBlocks\Math\Internal\Operations\Extension\ExtensionAdapter;
 use TinyBlocks\Math\Internal\Operations\MathOperations;
 use TinyBlocks\Math\Internal\Operations\MathOperationsFactory;
-use TinyBlocks\Math\Internal\Operations\Rounding\Rounder;
 use TinyBlocks\Math\RoundingMode;
 
 abstract class BigNumberBehavior implements BigNumber
@@ -66,8 +65,7 @@ abstract class BigNumberBehavior implements BigNumber
 
     public function withRounding(RoundingMode $mode): BigNumber
     {
-        $rounder = new Rounder(mode: $mode, bigNumber: $this);
-        $rounded = $rounder->round();
+        $rounded = $mode->round(bigNumber: $this);
 
         return static::fromString(value: $rounded->value, scale: $this->scale->value);
     }
@@ -131,7 +129,7 @@ abstract class BigNumberBehavior implements BigNumber
 
     public function toFloat(): float
     {
-        return (float)$this->toString();
+        return $this->number->toFloatWithScale(scale: $this->scale);
     }
 
     public function toString(): string

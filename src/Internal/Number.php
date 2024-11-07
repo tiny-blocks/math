@@ -96,6 +96,13 @@ final class Number
         return $this->value >= $other->value;
     }
 
+    public function toFloatWithScale(Scale $scale): float
+    {
+        $value = (float)$this->value;
+
+        return $scale->hasAutomaticScale() ? $value : (float)number_format($value, (int)$scale->value, '.', '');
+    }
+
     private function match(string $key): ?string
     {
         $math = $this->matches[$key] ?? null;

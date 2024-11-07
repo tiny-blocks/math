@@ -40,8 +40,8 @@ final class BigNumberTest extends TestCase
 
         /** @Then the result should have the correct scale and values */
         self::assertSame($scale, $actual->getScale());
+        self::assertSame($expected['float'], $actual->toFloat());
         self::assertSame($expected['string'], $actual->toString());
-        self::assertSame(floatval($expected['float']), $actual->toFloat());
     }
 
     #[DataProvider('providerForTestSubtract')]
@@ -56,8 +56,8 @@ final class BigNumberTest extends TestCase
 
         /** @Then the result should have the correct scale and values */
         self::assertSame($scale, $actual->getScale());
+        self::assertSame($expected['float'], $actual->toFloat());
         self::assertSame($expected['string'], $actual->toString());
-        self::assertSame(floatval($expected['float']), $actual->toFloat());
     }
 
     #[DataProvider('providerForTestMultiply')]
@@ -72,8 +72,8 @@ final class BigNumberTest extends TestCase
 
         /** @Then the result should have the correct scale and values */
         self::assertSame($scale, $actual->getScale());
+        self::assertSame($expected['float'], $actual->toFloat());
         self::assertSame($expected['string'], $actual->toString());
-        self::assertSame(floatval($expected['float']), $actual->toFloat());
     }
 
     #[DataProvider('providerForTestDivide')]
@@ -88,8 +88,8 @@ final class BigNumberTest extends TestCase
 
         /** @Then the result should have the correct scale and values */
         self::assertSame($scale, $actual->getScale());
+        self::assertSame($expected['float'], $actual->toFloat());
         self::assertSame($expected['string'], $actual->toString());
-        self::assertSame(floatval($expected['float']), $actual->toFloat());
     }
 
     #[DataProvider('providerForTestDivisionByZero')]
@@ -120,24 +120,23 @@ final class BigNumberTest extends TestCase
 
         /** @Then the result should match the expected values */
         self::assertSame($scale, $actual->getScale());
+        self::assertSame($expected['float'], $actual->toFloat());
         self::assertSame($expected['string'], $actual->toString());
-        self::assertSame(floatval($expected['float']), $actual->toFloat());
     }
 
     #[DataProvider('providerForTestWithScale')]
-    public function testWithScale(mixed $value, int $scale, int $withScale, array $expected): void
+    public function testWithScale(mixed $value, int $scale, array $expected): void
     {
-        /** @Given a BigNumber instance to be scaled */
-        $number = LargeNumber::fromFloat(value: $value, scale: $scale);
+        /** @Given a BigNumber instance */
+        $number = LargeNumber::fromFloat(value: $value);
 
         /** @When applying a new scale to the BigNumber */
-        $actual = $number->withScale(scale: $withScale);
+        $actual = $number->withScale(scale: $scale);
 
         /** @Then the result should have the correct adjusted scale and values */
-        self::assertSame($scale, $number->getScale());
-        self::assertSame($withScale, $actual->getScale());
+        self::assertSame($scale, $actual->getScale());
+        self::assertSame($expected['float'], $actual->toFloat());
         self::assertSame($expected['string'], $actual->toString());
-        self::assertSame(floatval($expected['float']), $actual->toFloat());
     }
 
     #[DataProvider('providerForTestIsZero')]
@@ -256,7 +255,7 @@ final class BigNumberTest extends TestCase
                 'scale'    => 0,
                 'value'    => '1',
                 'other'    => '1',
-                'expected' => ['float' => 2, 'string' => '2']
+                'expected' => ['float' => 2.0, 'string' => '2']
             ],
             'Adding with scale'                 => [
                 'scale'    => 3,
@@ -268,7 +267,7 @@ final class BigNumberTest extends TestCase
                 'scale'    => 0,
                 'value'    => '123',
                 'other'    => '-999',
-                'expected' => ['float' => -876, 'string' => '-876']
+                'expected' => ['float' => -876.0, 'string' => '-876']
             ],
             'Adding large numbers with decimal' => [
                 'scale'    => 4,
@@ -298,7 +297,7 @@ final class BigNumberTest extends TestCase
                 'scale'    => 0,
                 'value'    => '11',
                 'other'    => '12',
-                'expected' => ['float' => -1, 'string' => '-1']
+                'expected' => ['float' => -1.0, 'string' => '-1']
             ],
             'Subtraction with scale' => [
                 'scale'    => 4,
@@ -316,7 +315,7 @@ final class BigNumberTest extends TestCase
                 'scale'    => 0,
                 'value'    => '2',
                 'other'    => '2',
-                'expected' => ['float' => 4, 'string' => '4']
+                'expected' => ['float' => 4.0, 'string' => '4']
             ],
             'Multiplying negatives'       => [
                 'scale'    => 4,
@@ -358,13 +357,13 @@ final class BigNumberTest extends TestCase
                 'scale'    => 0,
                 'value'    => '0.00',
                 'other'    => '8',
-                'expected' => ['float' => 0, 'string' => '0']
+                'expected' => ['float' => 0.0, 'string' => '0']
             ],
             'Division resulting in negative' => [
                 'scale'    => 0,
                 'value'    => '-7',
                 'other'    => '0.2',
-                'expected' => ['float' => -35, 'string' => '-35']
+                'expected' => ['float' => -35.0, 'string' => '-35']
             ]
         ];
     }
@@ -385,7 +384,7 @@ final class BigNumberTest extends TestCase
                 'mode'     => RoundingMode::HALF_UP,
                 'scale'    => 2,
                 'value'    => 0.9950,
-                'expected' => ['float' => 1, 'string' => '1']
+                'expected' => ['float' => 1.0, 'string' => '1']
             ],
             'Half odd rounding'  => [
                 'mode'     => RoundingMode::HALF_ODD,
@@ -403,7 +402,7 @@ final class BigNumberTest extends TestCase
                 'mode'     => RoundingMode::HALF_EVEN,
                 'scale'    => 2,
                 'value'    => 0.9950,
-                'expected' => ['float' => 1, 'string' => '1']
+                'expected' => ['float' => 1.0, 'string' => '1']
             ]
         ];
     }
@@ -411,65 +410,50 @@ final class BigNumberTest extends TestCase
     public static function providerForTestWithScale(): array
     {
         return [
-            'Scaling zero'                                => [
-                'value'     => 0,
-                'scale'     => 2,
-                'withScale' => 2,
-                'expected'  => ['float' => 0.00, 'string' => '0.00']
+            'Zero scale with no decimals'                      => [
+                'value'    => 0,
+                'scale'    => 0,
+                'expected' => ['float' => 0.0, 'string' => '0']
             ],
-            'Scaling zero with one decimal'               => [
-                'value'     => 0.0,
-                'scale'     => 2,
-                'withScale' => 2,
-                'expected'  => ['float' => 0.00, 'string' => '0.00']
+            'Zero scale with one decimal place'                => [
+                'value'    => 0,
+                'scale'    => 1,
+                'expected' => ['float' => 0.0, 'string' => '0.0']
             ],
-            'Scaling zero with two decimals'              => [
-                'value'     => 0.00,
-                'scale'     => 3,
-                'withScale' => 3,
-                'expected'  => ['float' => 0.000, 'string' => '0.000']
+            'Zero scale with two decimal places'               => [
+                'value'    => 0,
+                'scale'    => 2,
+                'expected' => ['float' => 0.00, 'string' => '0.00']
             ],
-            'Scaling zero with three decimals'            => [
-                'value'     => 0.000,
-                'scale'     => 1,
-                'withScale' => 1,
-                'expected'  => ['float' => 0.0, 'string' => '0.0']
+            'Zero scale with three decimal places'             => [
+                'value'    => 0,
+                'scale'    => 3,
+                'expected' => ['float' => 0.000, 'string' => '0.000']
             ],
-            'Scaling with integer'                        => [
-                'value'     => 5,
-                'scale'     => 2,
-                'withScale' => 2,
-                'expected'  => ['float' => 5.00, 'string' => '5.00']
+            'Negative large value rounded to one decimal'      => [
+                'value'    => -553.99999,
+                'scale'    => 1,
+                'expected' => ['float' => -553.9, 'string' => '-553.9']
             ],
-            'Scaling with decimal and reducing precision' => [
-                'value'     => 123.4567,
-                'scale'     => 2,
-                'withScale' => 2,
-                'expected'  => ['float' => 123.45, 'string' => '123.45']
+            'Large positive number rounded to two decimals'    => [
+                'value'    => 999999.999,
+                'scale'    => 2,
+                'expected' => ['float' => 999999.99, 'string' => '999999.99']
             ],
-            'Scaling large negative number'               => [
-                'value'     => -553.99999,
-                'scale'     => 5,
-                'withScale' => 1,
-                'expected'  => ['float' => -553.9, 'string' => '-553.9']
+            'Small negative value rounded to four decimals'    => [
+                'value'    => -0.12345,
+                'scale'    => 4,
+                'expected' => ['float' => -0.1234, 'string' => '-0.1234']
             ],
-            'Scaling with precision reduction'            => [
-                'value'     => 10.5555,
-                'scale'     => 4,
-                'withScale' => 3,
-                'expected'  => ['float' => 10.555, 'string' => '10.555']
+            'Decimal value with precision reduction to two'    => [
+                'value'    => 123.4567,
+                'scale'    => 2,
+                'expected' => ['float' => 123.45, 'string' => '123.45']
             ],
-            'Scaling large positive number'               => [
-                'value'     => 999999.999,
-                'scale'     => 2,
-                'withScale' => 2,
-                'expected'  => ['float' => 999999.99, 'string' => '999999.99']
-            ],
-            'Scaling with small negative number'          => [
-                'value'     => -0.12345,
-                'scale'     => 4,
-                'withScale' => 4,
-                'expected'  => ['float' => -0.1234, 'string' => '-0.1234']
+            'Positive value with precision reduction to three' => [
+                'value'    => 10.5555,
+                'scale'    => 3,
+                'expected' => ['float' => 10.555, 'string' => '10.555']
             ]
         ];
     }

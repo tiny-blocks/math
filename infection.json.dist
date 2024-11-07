@@ -17,6 +17,9 @@
         "BCMath": false,
         "CastInt": false,
         "Ternary": false,
+        "RoundingFamily": false,
+        "DecrementInteger": false,
+        "IncrementInteger": false,
         "ProtectedVisibility": false
     },
     "phpUnit": {

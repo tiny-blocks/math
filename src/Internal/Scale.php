@@ -9,7 +9,7 @@ use TinyBlocks\Math\Internal\Exceptions\InvalidScale;
 
 final readonly class Scale
 {
-    private const MINIMUM = 0;
+    public const MINIMUM = 0;
     private const MAXIMUM = 2147483647;
     private const ZERO_DECIMAL_PLACE = 0;
 
