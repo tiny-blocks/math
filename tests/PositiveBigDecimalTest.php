@@ -22,6 +22,10 @@ final class PositiveBigDecimalTest extends TestCase
         /** @Then the created object should be an instance of both BigNumber and PositiveBigDecimal */
         self::assertInstanceOf(BigNumber::class, $actual);
         self::assertInstanceOf(PositiveBigDecimal::class, $actual);
+
+        /** @And the scale and value should be correctly initialized */
+        self::assertSame($value, $actual->toFloat());
+        self::assertNull($actual->getScale());
     }
 
     public function testFromString(): void
@@ -35,6 +39,10 @@ final class PositiveBigDecimalTest extends TestCase
         /** @Then the created object should be an instance of both BigNumber and PositiveBigDecimal */
         self::assertInstanceOf(BigNumber::class, $actual);
         self::assertInstanceOf(PositiveBigDecimal::class, $actual);
+
+        /** @And the scale and value should be correctly initialized */
+        self::assertSame($value, $actual->toString());
+        self::assertNull($actual->getScale());
     }
 
     #[DataProvider('dataProviderForTestNonPositiveValue')]

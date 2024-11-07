@@ -18,6 +18,9 @@ final class BigDecimalTest extends TestCase
         /** @Then the created object should be an instance of both BigNumber and BigDecimal */
         self::assertInstanceOf(BigNumber::class, $actual);
         self::assertInstanceOf(BigDecimal::class, $actual);
+
+        /** @And the scale and value should be correctly initialized */
+        self::assertSame($value, $actual->toString());
     }
 
     #[DataProvider('dataProviderForFromFloat')]
@@ -29,6 +32,9 @@ final class BigDecimalTest extends TestCase
         /** @Then the created object should be an instance of both BigNumber and BigDecimal */
         self::assertInstanceOf(BigNumber::class, $actual);
         self::assertInstanceOf(BigDecimal::class, $actual);
+
+        /** @And the scale and value should be correctly initialized */
+        self::assertSame($value, $actual->toFloat());
     }
 
     public static function dataProviderForFromString(): array

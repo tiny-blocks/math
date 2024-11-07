@@ -40,14 +40,15 @@ final readonly class Scale
 
     public function numberWithScale(Number $number, int $scale): Number
     {
-        $result = explode('.', $number->value);
-
-        if (count($result) <= 1) {
-            return Number::from(value: $result[0]);
+        if ($number->isZero()) {
+            $formattedValue = number_format(0, $scale, '.', '');
+            return Number::from(value: $formattedValue);
         }
 
+        $result = explode('.', $number->value);
         $decimal = $result[0];
-        $decimalPlaces = substr($result[1], self::ZERO_DECIMAL_PLACE, $scale);
+        $decimalPlaces = isset($result[1]) ? substr($result[1], self::ZERO_DECIMAL_PLACE, $scale) : '';
+        $decimalPlaces = str_pad($decimalPlaces, $scale, '0');
 
         $template = '%s.%s';
         $value = sprintf($template, $decimal, $decimalPlaces);
