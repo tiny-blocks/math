@@ -411,29 +411,65 @@ final class BigNumberTest extends TestCase
     public static function providerForTestWithScale(): array
     {
         return [
-            'Scaling zero'                     => [
+            'Scaling zero'                                => [
                 'value'     => 0,
-                'scale'     => 0,
-                'withScale' => 0,
-                'expected'  => ['float' => 0, 'string' => '0']
+                'scale'     => 2,
+                'withScale' => 2,
+                'expected'  => ['float' => 0.00, 'string' => '0.00']
             ],
-            'Scaling with decimal'             => [
+            'Scaling zero with one decimal'               => [
                 'value'     => 0.0,
+                'scale'     => 2,
+                'withScale' => 2,
+                'expected'  => ['float' => 0.00, 'string' => '0.00']
+            ],
+            'Scaling zero with two decimals'              => [
+                'value'     => 0.00,
+                'scale'     => 3,
+                'withScale' => 3,
+                'expected'  => ['float' => 0.000, 'string' => '0.000']
+            ],
+            'Scaling zero with three decimals'            => [
+                'value'     => 0.000,
                 'scale'     => 1,
                 'withScale' => 1,
-                'expected'  => ['float' => 0.0, 'string' => '0']
+                'expected'  => ['float' => 0.0, 'string' => '0.0']
             ],
-            'Scaling large negative number'    => [
+            'Scaling with integer'                        => [
+                'value'     => 5,
+                'scale'     => 2,
+                'withScale' => 2,
+                'expected'  => ['float' => 5.00, 'string' => '5.00']
+            ],
+            'Scaling with decimal and reducing precision' => [
+                'value'     => 123.4567,
+                'scale'     => 2,
+                'withScale' => 2,
+                'expected'  => ['float' => 123.45, 'string' => '123.45']
+            ],
+            'Scaling large negative number'               => [
                 'value'     => -553.99999,
                 'scale'     => 5,
                 'withScale' => 1,
                 'expected'  => ['float' => -553.9, 'string' => '-553.9']
             ],
-            'Scaling with precision reduction' => [
+            'Scaling with precision reduction'            => [
                 'value'     => 10.5555,
                 'scale'     => 4,
                 'withScale' => 3,
                 'expected'  => ['float' => 10.555, 'string' => '10.555']
+            ],
+            'Scaling large positive number'               => [
+                'value'     => 999999.999,
+                'scale'     => 2,
+                'withScale' => 2,
+                'expected'  => ['float' => 999999.99, 'string' => '999999.99']
+            ],
+            'Scaling with small negative number'          => [
+                'value'     => -0.12345,
+                'scale'     => 4,
+                'withScale' => 4,
+                'expected'  => ['float' => -0.1234, 'string' => '-0.1234']
             ]
         ];
     }
