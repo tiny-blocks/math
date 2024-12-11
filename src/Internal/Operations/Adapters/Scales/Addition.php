@@ -10,6 +10,7 @@ use TinyBlocks\Math\Internal\Scale;
 final readonly class Addition implements Scales
 {
     private Scale $augendScale;
+
     private Scale $addendScale;
 
     public function __construct(private BigNumber $augend, private BigNumber $addend)

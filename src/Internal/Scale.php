@@ -9,9 +9,10 @@ use TinyBlocks\Math\Internal\Exceptions\InvalidScale;
 
 final readonly class Scale
 {
-    public const MINIMUM = 0;
-    private const MAXIMUM = 2147483647;
-    private const ZERO_DECIMAL_PLACE = 0;
+    public const int MINIMUM = 0;
+    private const int MAXIMUM = 2147483647;
+    private const int ZERO_DECIMAL_PLACE = 0;
+    private const int FIRST_DECIMAL_PLACE = 1;
 
     private function __construct(public ?int $value)
     {
@@ -47,8 +48,9 @@ final readonly class Scale
 
         $result = explode('.', $number->value);
         $decimal = $result[0];
-        $decimalPlaces = isset($result[1]) ? substr($result[1], self::ZERO_DECIMAL_PLACE, $scale) : '';
-        $decimalPlaces = str_pad($decimalPlaces, $scale, '0');
+
+        $places = substr($result[self::FIRST_DECIMAL_PLACE], self::ZERO_DECIMAL_PLACE, $scale);
+        $decimalPlaces = str_pad($places, $scale, '0');
 
         $template = '%s.%s';
         $value = sprintf($template, $decimal, $decimalPlaces);

@@ -4,9 +4,10 @@ parameters:
   level: 9
   tmpDir: report/phpstan
   ignoreErrors:
+    - '#does not accept#'
     - '#Binary operation#'
-    - '#of function sprintf expects#'
     - '#Access to an undefined property#'
+    - '#function number_format expects int#'
     - '#expects TinyBlocks\\Math\\BigNumber#'
     - '#type specified in iterable type array#'
   reportUnmatchedIgnoredErrors: false

@@ -8,17 +8,18 @@ use TinyBlocks\Math\Internal\Exceptions\InvalidNumber;
 
 final class Number
 {
-    private const ZERO = 0.0;
-    private const SIGN = '?<sign>[\-\+]';
-    private const POINT = '?<point>\.';
-    private const INTEGRAL = '?<integral>[0-9]+';
-    private const EXPONENT = '?<exponent>[\-\+]?[0-9]+';
-    private const NUMERATOR = '?<numerator>[0-9]+';
-    private const FRACTIONAL = '?<fractional>[0-9]+';
-    private const DENOMINATOR = '?<denominator>[0-9]+';
-    private const VALID_NUMBER = '/^(%s)?(?:(?:(%s)?(%s)?(%s)?(?:[eE](%s))?)|(?:(%s)\/?(%s)))$/';
+    private const float ZERO = 0.0;
+    private const string SIGN = '?<sign>[\-\+]';
+    private const string POINT = '?<point>\.';
+    private const string INTEGRAL = '?<integral>[0-9]+';
+    private const string EXPONENT = '?<exponent>[\-\+]?[0-9]+';
+    private const string NUMERATOR = '?<numerator>[0-9]+';
+    private const string FRACTIONAL = '?<fractional>[0-9]+';
+    private const string DENOMINATOR = '?<denominator>[0-9]+';
+    private const string VALID_NUMBER = '/^(%s)?(?:(?:(%s)?(%s)?(%s)?(?:[eE](%s))?)|(?:(%s)\/?(%s)))$/';
 
     private int $match;
+
     private array $matches = [];
 
     private function __construct(public readonly string $value)
@@ -34,7 +35,7 @@ final class Number
             self::DENOMINATOR
         );
 
-        $this->match = (int)preg_match($pattern, $this->value, $this->matches);
+        $this->match = preg_match($pattern, $this->value, $this->matches);
 
         if ($this->isInvalidNumber()) {
             throw new InvalidNumber(value: $this->value);
@@ -100,7 +101,7 @@ final class Number
     {
         $value = (float)$this->value;
 
-        return $scale->hasAutomaticScale() ? $value : (float)number_format($value, (int)$scale->value, '.', '');
+        return $scale->hasAutomaticScale() ? $value : (float)number_format($value, $scale->value, '.', '');
     }
 
     private function match(string $key): ?string
@@ -114,6 +115,6 @@ final class Number
     {
         $integral = $this->match(key: 'integral');
 
-        return ($this->match != 1) || (is_null($integral) && is_null($this->getFractional()));
+        return ($this->match !== 1) || (is_null($integral) && is_null($this->getFractional()));
     }
 }

@@ -12,6 +12,7 @@ final class NonNegativeValue extends RuntimeException
     public function __construct(Number $number)
     {
         $template = 'Value <%s> is not valid. Must be a negative number less than zero.';
+
         parent::__construct(message: sprintf($template, $number->value));
     }
 }
