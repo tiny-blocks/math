@@ -9,8 +9,9 @@ use TinyBlocks\Math\Internal\Scale;
 
 final readonly class Division implements Scales
 {
-    private Scale $dividendScale;
     private Scale $divisorScale;
+
+    private Scale $dividendScale;
 
     public function __construct(private BigNumber $dividend, private BigNumber $divisor)
     {

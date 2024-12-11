@@ -19,6 +19,10 @@ enum RoundingMode: int
     case HALF_EVEN = 3;
     case HALF_DOWN = 2;
 
+    private const int ODD_CORRECTION = 1;
+    private const int EVEN_CHECK_MODULO = 2;
+    private const float HALF_ODD_EVEN_THRESHOLD = 0.5;
+
     public function round(BigNumber $bigNumber): Number
     {
         $precision = $bigNumber->getScale() ?? Scale::MINIMUM;
@@ -45,8 +49,8 @@ enum RoundingMode: int
         $scaledValue = $value * $factor;
         $rounded = round($scaledValue);
 
-        if ($rounded % 2 === 0) {
-            $rounded += ($scaledValue > $rounded) ? 1 : -1;
+        if ($rounded % self::EVEN_CHECK_MODULO === 0) {
+            $rounded += ($scaledValue > $rounded) ? self::ODD_CORRECTION : -self::ODD_CORRECTION;
         }
 
         return $rounded / $factor;
@@ -59,7 +63,7 @@ enum RoundingMode: int
 
     private function roundHalfDown(float $value, int $factor): float
     {
-        $value = ($value * $factor - 0.5) / $factor;
+        $value = ($value * $factor - self::HALF_ODD_EVEN_THRESHOLD) / $factor;
 
         return floor($value * $factor) / $factor;
     }

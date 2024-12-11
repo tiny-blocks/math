@@ -10,6 +10,7 @@ use TinyBlocks\Math\Internal\Scale;
 final readonly class Subtraction
 {
     private Scale $minuendScale;
+
     private Scale $subtrahendScale;
 
     public function __construct(private BigNumber $minuend, private BigNumber $subtrahend)
