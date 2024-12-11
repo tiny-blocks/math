@@ -12,7 +12,7 @@ use TinyBlocks\Math\Internal\Exceptions\DivisionByZero;
  */
 interface BigNumber
 {
-    public const AUTOMATIC_SCALE = null;
+    public const null AUTOMATIC_SCALE = null;
 
     /**
      * Converts the current BigNumber to its absolute value.

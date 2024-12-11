@@ -9,13 +9,14 @@ use TinyBlocks\Math\Internal\Scale;
 
 final readonly class Multiplication implements Scales
 {
-    private Scale $multiplicandScale;
     private Scale $multiplierScale;
+
+    private Scale $multiplicandScale;
 
     public function __construct(private BigNumber $multiplicand, private BigNumber $multiplier)
     {
-        $this->multiplicandScale = Scale::from(value: $this->multiplicand->getScale());
         $this->multiplierScale = Scale::from(value: $this->multiplier->getScale());
+        $this->multiplicandScale = Scale::from(value: $this->multiplicand->getScale());
     }
 
     public function applyScale(): Scale

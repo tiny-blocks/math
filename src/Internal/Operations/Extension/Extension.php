@@ -9,7 +9,7 @@ namespace TinyBlocks\Math\Internal\Operations\Extension;
  */
 interface Extension
 {
-    public const BC_MATH = 'bcmath';
+    public const string BC_MATH = 'bcmath';
 
     /**
      * Checks if a given PHP extension is loaded and available for use.
