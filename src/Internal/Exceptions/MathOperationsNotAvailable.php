@@ -8,10 +8,10 @@ use RuntimeException;
 
 final class MathOperationsNotAvailable extends RuntimeException
 {
-    public function __construct(array $extensions)
+    public function __construct(private readonly array $extensions)
     {
         $template = 'There are no implementations available. Enable one of these <%s> extensions.';
 
-        parent::__construct(message: sprintf($template, implode(',', $extensions)));
+        parent::__construct(message: sprintf($template, implode(',', $this->extensions)));
     }
 }

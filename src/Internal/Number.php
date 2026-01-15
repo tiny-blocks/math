@@ -44,6 +44,10 @@ final class Number
 
     public static function from(float|string $value): Number
     {
+        if (is_float($value) && is_nan($value)) {
+            throw new InvalidNumber(value: "NAN");
+        }
+
         return new Number(value: (string)$value);
     }
 

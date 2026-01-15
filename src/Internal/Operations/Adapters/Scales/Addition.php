@@ -25,10 +25,6 @@ final readonly class Addition implements Scales
             $augendScale = $this->augendScale->scaleOf(value: $this->augend->toString());
             $addendScale = $this->addendScale->scaleOf(value: $this->addend->toString());
 
-            if ($augendScale->equals(other: $addendScale)) {
-                return $augendScale;
-            }
-
             return $augendScale->greaterScale(other: $addendScale);
         }
 

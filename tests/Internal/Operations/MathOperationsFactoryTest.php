@@ -17,6 +17,6 @@ final class MathOperationsFactoryTest extends TestCase
         $this->expectException(MathOperationsNotAvailable::class);
         $this->expectExceptionMessage(sprintf($template, 'bcmath'));
 
-        (new MathOperationsFactory(extension: new ExtensionAdapterMock()))->build();
+        new MathOperationsFactory(extension: new ExtensionAdapterMock())->build();
     }
 }
