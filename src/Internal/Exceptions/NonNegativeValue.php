@@ -9,10 +9,10 @@ use TinyBlocks\Math\Internal\Number;
 
 final class NonNegativeValue extends RuntimeException
 {
-    public function __construct(Number $number)
+    public function __construct(private readonly Number $number)
     {
         $template = 'Value <%s> is not valid. Must be a negative number less than zero.';
 
-        parent::__construct(message: sprintf($template, $number->value));
+        parent::__construct(message: sprintf($template, $this->number->value));
     }
 }

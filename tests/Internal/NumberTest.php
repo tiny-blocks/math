@@ -24,6 +24,20 @@ final class NumberTest extends TestCase
         Number::from(value: $value);
     }
 
+    public function testInvalidNumberWhenValueIsNaN(): void
+    {
+        /** @Given a Not a Number (NaN) value */
+        $value = NAN;
+        $template = 'The value <NAN> is not a valid number.';
+
+        /** @Then an InvalidNumber exception should be thrown */
+        $this->expectException(InvalidNumber::class);
+        $this->expectExceptionMessage($template);
+
+        /** @When attempting to create a Number instance with the NaN value */
+        Number::from(value: $value);
+    }
+
     public static function invalidNumberDataProvider(): array
     {
         return [
@@ -32,7 +46,6 @@ final class NumberTest extends TestCase
             'String "null"'           => ['value' => 'null'],
             'String "true"'           => ['value' => 'true'],
             'String "false"'          => ['value' => 'false'],
-            'Not a Number (NaN)'      => ['value' => NAN],
             'Positive infinity'       => ['value' => INF],
             'Negative infinity'       => ['value' => -INF],
             'Zero followed by x'      => ['value' => '0x'],

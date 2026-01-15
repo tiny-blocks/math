@@ -139,7 +139,7 @@ interface BigNumber
     /**
      * Converts the current BigNumber to a string representation.
      *
-     * @return string The string representation of the BigNumber.
+     * @return numeric-string The string representation of the BigNumber.
      */
     public function toString(): string;
 

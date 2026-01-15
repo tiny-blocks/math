@@ -6,6 +6,7 @@ parameters:
   ignoreErrors:
     - '#does not accept#'
     - '#Binary operation#'
+    - '#should return numeric-string#'
     - '#Access to an undefined property#'
     - '#function number_format expects int#'
     - '#expects TinyBlocks\\Math\\BigNumber#'

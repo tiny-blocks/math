@@ -23,11 +23,7 @@ final readonly class Subtraction
     {
         if ($this->minuendScale->hasAutomaticScale() && $this->subtrahendScale->hasAutomaticScale()) {
             $minuendScale = $this->minuendScale->scaleOf(value: $this->minuend->toString());
-            $subtrahendScale = $this->minuendScale->scaleOf(value: $this->subtrahend->toString());
-
-            if ($minuendScale->equals(other: $subtrahendScale)) {
-                return $minuendScale;
-            }
+            $subtrahendScale = $this->subtrahendScale->scaleOf(value: $this->subtrahend->toString());
 
             return $minuendScale->greaterScale(other: $subtrahendScale);
         }
