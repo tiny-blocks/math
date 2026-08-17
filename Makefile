@@ -6,7 +6,15 @@ ifeq ($(ARCH),arm64)
     PLATFORM := --platform=linux/amd64
 endif
 
-DOCKER_RUN = docker run ${PLATFORM} --rm -it --net=host -v ${PWD}:/app -w /app gustavofreze/php:8.5-alpine
+TTY := $(shell [ -t 0 ] && echo -it)
+
+PHP_VERSION := $(shell sed -n 's/.*"php": *"^\([0-9]*\.[0-9]*\)".*/\1/p' composer.json)
+IMAGE_VERSION := 1.0.0
+PHP_IMAGE := gustavofreze/php:${PHP_VERSION}-cli-${IMAGE_VERSION}
+WORKSPACE := /var/www/html
+BCMATH_INI := $${PHP_INI_DIR}/conf.d/docker-php-ext-bcmath.ini
+
+DOCKER_RUN = docker run ${PLATFORM} --rm ${TTY} --net=host -v ${PWD}:${WORKSPACE} ${PHP_IMAGE}
 
 RESET := \033[0m
 GREEN := \033[0;32m
@@ -16,43 +24,55 @@ YELLOW := \033[0;33m
 
 .PHONY: configure
 configure: ## Configure development environment
-	@${DOCKER_RUN} composer update --optimize-autoloader
+	@${DOCKER_RUN} composer configure
 
-.PHONY: test
-test: ## Run all tests with coverage
+.PHONY: configure-and-update
+configure-and-update: ## Configure development environment and update dependencies
+	@${DOCKER_RUN} composer configure-and-update
+
+.PHONY: tests
+tests: ## Run unit and mutation tests with coverage
 	@${DOCKER_RUN} composer tests
 
 .PHONY: test-file
-test-file: ## Run tests for a specific file (usage: make test-file FILE=path/to/file)
+test-file: ## Run tests for a specific file (usage: make test-file FILE=ClassNameTest)
 	@${DOCKER_RUN} composer test-file ${FILE}
 
-.PHONY: test-no-coverage
-test-no-coverage: ## Run all tests without coverage
-	@${DOCKER_RUN} composer tests-no-coverage
+.PHONY: tests-without-bcmath
+tests-without-bcmath: ## Run unit tests on the pure PHP backend, with the extension unloaded
+	@${DOCKER_RUN} sh -c 'rm -f ${BCMATH_INI} && php ./vendor/bin/phpunit --configuration phpunit.xml --no-coverage tests'
 
 .PHONY: review
-review: ## Run static code analysis
+review: ## Run lint and static analysis
 	@${DOCKER_RUN} composer review
 
 .PHONY: show-reports
-show-reports: ## Open static analysis reports (e.g., coverage, lints) in the browser
-	@sensible-browser report/coverage/coverage-html/index.html report/coverage/mutation-report.html
+show-reports: ## Open coverage and mutation reports in the browser
+	@sensible-browser reports/coverage/coverage-html/index.html reports/coverage/mutation-report.html
+
+.PHONY: show-outdated
+show-outdated: ## Show outdated direct dependencies
+	@${DOCKER_RUN} composer outdated --direct
+
+.PHONY: show-image
+show-image: ## Show the pinned PHP tooling image
+	@echo ${PHP_IMAGE}
 
 .PHONY: clean
 clean: ## Remove dependencies and generated artifacts
 	@sudo chown -R ${USER}:${USER} ${PWD}
-	@rm -rf report vendor .phpunit.cache *.lock
+	@rm -rf reports vendor .phpunit.cache *.lock
 
 .PHONY: help
-help:  ## Display this help message
+help: ## Display this help message
 	@echo "Usage: make [target]"
 	@echo ""
 	@echo "$$(printf '$(GREEN)')Setup$$(printf '$(RESET)')"
-	@grep -E '^(configure):.*?## .*$$' $(MAKEFILE_LIST) \
+	@grep -E '^(configure|configure-and-update):.*?## .*$$' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*? ## "}; {printf "$(YELLOW)%-25s$(RESET) %s\n", $$1, $$2}'
 	@echo ""
 	@echo "$$(printf '$(GREEN)')Testing$$(printf '$(RESET)')"
-	@grep -E '^(test|test-file|test-no-coverage):.*?## .*$$' $(MAKEFILE_LIST) \
+	@grep -E '^(tests|test-file|tests-without-bcmath):.*?## .*$$' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "$(YELLOW)%-25s$(RESET) %s\n", $$1, $$2}'
 	@echo ""
 	@echo "$$(printf '$(GREEN)')Quality$$(printf '$(RESET)')"
@@ -60,7 +80,7 @@ help:  ## Display this help message
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "$(YELLOW)%-25s$(RESET) %s\n", $$1, $$2}'
 	@echo ""
 	@echo "$$(printf '$(GREEN)')Reports$$(printf '$(RESET)')"
-	@grep -E '^(show-reports):.*?## .*$$' $(MAKEFILE_LIST) \
+	@grep -E '^(show-reports|show-outdated|show-image):.*?## .*$$' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "$(YELLOW)%-25s$(RESET) %s\n", $$1, $$2}'
 	@echo ""
 	@echo "$$(printf '$(GREEN)')Cleanup$$(printf '$(RESET)')"
