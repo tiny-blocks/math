@@ -1,14 +1,30 @@
 parameters:
-  paths:
-    - src
-  level: 9
-  tmpDir: report/phpstan
-  ignoreErrors:
-    - '#does not accept#'
-    - '#Binary operation#'
-    - '#should return numeric-string#'
-    - '#Access to an undefined property#'
-    - '#function number_format expects int#'
-    - '#expects TinyBlocks\\Math\\BigNumber#'
-    - '#type specified in iterable type array#'
-  reportUnmatchedIgnoredErrors: false
+    level: max
+    paths:
+        - src
+        - tests
+    ignoreErrors:
+        # The bcmath stubs type every operand as numeric-string. The library validates the shape
+        # before a value reaches a calculator, and the Calculator contract documents it, so the
+        # narrowing cannot be expressed without PHPDoc, which is prohibited inside src/Internal/.
+        - identifier: argument.type
+          path: src/Internal/Backends/BcMathCalculator.php
+
+        # PHPDoc is prohibited on concrete collaborators inside src/Internal/, so the working
+        # lists inside the allocation algorithm are suppressed here rather than annotated.
+        - identifier: argument.type
+          path: src/Internal/Allocations/Allocation.php
+        - identifier: missingType.iterableValue
+          path: src/Internal/Allocations/Allocation.php
+
+        # Schoolbook multiplication fills the product by computed index, so PHPStan cannot prove the
+        # result is still a list. It is: every index from zero upward is written before it is read.
+        - identifier: argument.type
+          path: src/Internal/Backends/Magnitude.php
+          count: 1
+
+        # PHPDoc is prohibited inside tests/, so data provider return types are suppressed here
+        # rather than annotated.
+        - identifier: missingType.iterableValue
+          path: tests
+    reportUnmatchedIgnoredErrors: true
