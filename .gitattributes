@@ -2,9 +2,6 @@
 
 *.php text diff=php
 
-# Keep Claude tooling scripts out of GitHub's language statistics
-/.claude             export-ignore
-
 # Dev-only, excluded from the Packagist tarball
 /.github             export-ignore
 /docs                export-ignore
