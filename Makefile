@@ -12,7 +12,8 @@ HOST_USER := $(shell id -u):$(shell id -g)
 PHP_VERSION := $(shell sed -n 's/.*"php": *"^\([0-9]*\.[0-9]*\)".*/\1/p' composer.json)
 PHP_IMAGE := gustavofreze/php:${PHP_VERSION}-cli
 WORKSPACE := /var/www/html
-BCMATH_INI := $${PHP_INI_DIR}/conf.d/docker-php-ext-bcmath.ini
+WITHOUT_BCMATH := cp -r $${PHP_INI_DIR}/conf.d /tmp/conf.d && rm /tmp/conf.d/docker-php-ext-bcmath.ini \
+	&& PHP_INI_SCAN_DIR=/tmp/conf.d
 
 DOCKER_RUN = docker run ${PLATFORM} -u ${HOST_USER} --rm ${TTY} --net=host \
 	-e COMPOSER_HOME=/tmp/composer \
@@ -42,7 +43,7 @@ test-file: ## Run tests for a specific file (usage: make test-file FILE=ClassNam
 
 .PHONY: tests-without-bcmath
 tests-without-bcmath: ## Run unit tests on the pure PHP backend, with the extension unloaded
-	@${DOCKER_RUN} sh -c 'rm -f ${BCMATH_INI} && php ./vendor/bin/phpunit --configuration phpunit.xml --no-coverage tests'
+	@${DOCKER_RUN} sh -c '${WITHOUT_BCMATH} php ./vendor/bin/phpunit --configuration phpunit.xml --no-coverage tests'
 
 .PHONY: review
 review: ## Run lint and static analysis
