@@ -10,8 +10,7 @@ TTY := $(shell [ -t 0 ] && echo -it)
 HOST_USER := $(shell id -u):$(shell id -g)
 
 PHP_VERSION := $(shell sed -n 's/.*"php": *"^\([0-9]*\.[0-9]*\)".*/\1/p' composer.json)
-IMAGE_VERSION := 1.0.4
-PHP_IMAGE := gustavofreze/php:${PHP_VERSION}-cli-${IMAGE_VERSION}
+PHP_IMAGE := gustavofreze/php:${PHP_VERSION}-cli
 WORKSPACE := /var/www/html
 BCMATH_INI := $${PHP_INI_DIR}/conf.d/docker-php-ext-bcmath.ini
 
@@ -58,7 +57,7 @@ show-outdated: ## Show outdated direct dependencies
 	@${DOCKER_RUN} composer outdated --direct
 
 .PHONY: show-image
-show-image: ## Show the pinned PHP tooling image
+show-image: ## Show the PHP tooling image
 	@echo ${PHP_IMAGE}
 
 .PHONY: clean
